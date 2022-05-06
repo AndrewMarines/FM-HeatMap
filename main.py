@@ -51,7 +51,7 @@ def screenshot():
     print("finito")
 
 def programma():
-    #screenshot()
+    screenshot()
     heatmap = np.zeros((735, 474))
 
     for movimento in glob.glob('movimenti/*.png'):
