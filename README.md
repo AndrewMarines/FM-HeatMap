@@ -1,16 +1,26 @@
 # FM-HeatMap
 
-THE CODE IS STILL RAW. I'M GONNA UPDATE IT WHEN I HAVE TIME.
-HOW CAN YOU USE IT RIGHT NOW?
-This script use python and some libraries.
-Delete all the pngs inside the dir  "Movimenti".
-Open main.py
-  Line 45 you'll see ImageGrab. x,y,w,h are the pixels of the desktop(FOOTBALL MANAGER NEEDS TO BE ON TOP OF EVERYTHING) the script is gonna take the screenshot at. 
-  Run it and watch if the pngs the program created is fine(dir "Movimenti"). If it's not okay take a screenshot of all your desktop(with fm on top), open it on paint and find the pixels you gotta cover.
-  Right now the code will take screenshot every t. seconds. If you want a full match, the code is already working if you select speed 10x.
-  If you want just a part of the game my tip is to stop the code yourself.
-  After you've done that at line 54 there's "screenshot()". If you already have all the movements you need write before all in that line # . Example #screenshot()
-  If you run it now, it will give you the heatmap. WATCH OUT, IF YOU WANT THE FULL MATCH YOU GOTTA ROTATE HALF OF THE PNGS THE CODE CREATED(DO IT MANUALLY FROM WINDOWS)
-  
+  HOW TO USE IT:
+    
+    WHEN YOU RUN IT, THE PROGRAM IS DIVIDED INTO TWO SECTIONS:
+    SCREENSHOT;
+    HEATMAP.
+    
+    
+    SCREENSHOT:
+      OPEN FOOTBALL MANAGER AND GO INTO THE MOVEMENTS ANALYSIS SECTION. ACTIVATE THE PLAYER YOU WANNA ANALYSE THE MOVEMENT ON AND STOP IT AT THE START OF THE         MATCH.
+      CLICK ON THE PREVIEW IMAGE. WITH YOUR MOUSE, LEFT CLICK ON THE TOP-LEFT CORNER OF THE ANALYSIS PITCH, RIGHT CLICK ON THE BOTTOM-RIGHT.
+      CLICK 'AVVIO'.
+      THE PROGRAM WILL GIVE YOU A SCREENSHOT OF YOUR SCREEN. CLICK ON THE END OF THE TIME BAR.
+      THE CODE WILL NOW START WATCHING THE MATCH AND TAKING SCREENSHOT ALONE.
+    
+    HEATMAP:
+      THE PROGRAM WILL DISPLAY EVERY IMAGE INSIDE THE DIRECTORY "MOVIMENTI".
+      CLICK "REMOVE FROM QUEUE" TO REMOVE THE IMAGE FROM THE CURRENT GENERATION(THIS WON'T DELETE THE IMAGE FROM YOUR DISK);
+      CLICK "REMOVE FROM DISK" TO DELETE THE IMAGE.
+      WHEN YOU WANNA GENERATE THE HEATMAP, JUST CLICK "CREATE HEATMAP"
+      
+      
+
   Write me on twitter if you need help : https://twitter.com/andreamarini2
-  I'm gonna update to make it more user friendly in the next few days. Please wait.
+
