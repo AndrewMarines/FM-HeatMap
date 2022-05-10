@@ -16,7 +16,6 @@ intensita_pixel=3
 intensita_p_vicini = 1
 ingame_seconds_per_screenshot = 40
 number_of_screenshot = 15
-
 x_iniziale = 0
 y_iniziale = 0
 x_finale = 1000
@@ -29,8 +28,8 @@ upper = np.array([40,170,255])
 CONF_FILE = "config.ini"
 config = configparser.ConfigParser()
 
-
 def screenshot():
+
     read_bar()
     readconfig()
     x = 0
@@ -53,8 +52,6 @@ def screenshot():
         x+=1
     path = os.path.abspath("movimenti/")
     os.startfile(path)
-
-
 
 def ant_screenshot():
     readconfig()
@@ -127,7 +124,6 @@ def read_bar():
     cv2.setMouseCallback('image', click_event)
     cv2.waitKey(0)
 
-
 def save_config():
     config['DEFAULT'] = {
         'intensita_pixel': intensita_pixel,
@@ -165,14 +161,17 @@ def lettura_immagini(heatmap):
 
     for movimento in glob.glob('elab_movimenti/*.png'):
         image = cv2.imread(movimento)
+        image = cv2.resize(image, (x_finale - x_iniziale, y_finale - y_iniziale))
         mask = cv2.inRange(image, lower, upper)
         coord = cv2.findNonZero(mask)
+
         intensita(heatmap, coord)
 
 def intensita(array, coord):
     for c in coord:
-        x = c[0][0]
-        y= c[0][1]
+
+        y = c[0][0]
+        x= c[0][1]
 
         array[x, y] += intensita_pixel
         try:
@@ -185,30 +184,43 @@ def intensita(array, coord):
             pass
 
 def generazione_heatmap():
-    heatmap = np.zeros((x_finale - x_iniziale, y_finale - y_iniziale))
+    heatmap = np.zeros((y_finale - y_iniziale, x_finale - x_iniziale))
     lettura_immagini(heatmap)
-    print('Lettura eseguita')
     heatmapshow = None
     heatmapshow=heatmap*20
     heatmapshow = cv2.normalize(heatmap, heatmapshow, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
     heatmapshow = cv2.applyColorMap(heatmapshow, cv2.COLORMAP_INFERNO)
 
-    print(heatmapshow.shape)
-    x_campo=  x_finale - x_iniziale
-    y_campo =  y_finale - y_iniziale
+    x_campo = x_finale - x_iniziale
+    y_campo = y_finale - y_iniziale
     Campo = cv2.imread("src//Campo.png")
-    Campo = cv2.resize(Campo, ( y_campo, x_campo))
+    Campo = cv2.resize(Campo, (x_campo, y_campo))
     heatmapshow = cv2.addWeighted(Campo, 1, heatmapshow, 2, 0)
     cv2.imshow('Heatmap', heatmapshow)
     cv2.waitKey(0)
 
-def set_Time_Number_Screen(ts,ns):
-    global ingame_seconds_per_screenshot, number_of_screenshot
+def set_Time_Screen(ts):
+    global ingame_seconds_per_screenshot
     ingame_seconds_per_screenshot = ts
+    save_config()
+
+def set_Number_Screenshot(ns):
+    global number_of_screenshot
     number_of_screenshot = ns
+    save_config()
+
+def set_Pixel_Intensity(PI):
+    global intensita_pixel
+    intensita_pixel = PI
+    save_config()
+
+def set_Around_Pixel_Intensity(A_P_I):
+    global intensita_p_vicini
+    intensita_p_vicini = A_P_I
     save_config()
 
 def organize_images():
     source_folder = "movimenti"
     path = "elab_movimenti"
+    shutil.rmtree(path)
     shutil.copytree(source_folder, path,dirs_exist_ok=True)

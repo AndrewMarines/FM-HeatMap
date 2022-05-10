@@ -60,15 +60,19 @@ class Screenshot(tk.Frame):
         img = Image.fromarray(Utils.ant_screenshot())
         Screenshot = ImageTk.PhotoImage(image = img)
         Screenshot = Screenshot._PhotoImage__photo.subsample(2, 2)
-        Screen = tk.Button(self, image = Screenshot, command =lambda: [Utils.find_coords(),master.switch_frame(Home)])
+        Screen = tk.Button(self, image = Screenshot, command =lambda: [Utils.find_coords(),
+                                                                       master.switch_frame(Home)])
         Screen.image = Screenshot
         Screen.grid(row = 0, column=2, padx=20, pady=20,rowspan=2)
 
-        avvio = tk.Button(self, text="AVVIO",
+        avvio = tk.Button(self, text="START",
                   command=lambda: [
-                                    Utils.set_Time_Number_Screen(var_ts.get(), var_ns.get()),
+                                    Utils.set_Time_Screen(var_ts.get()),
+                                    Utils.set_Number_Screenshot(var_ns.get()),
                                     Utils.screenshot(),
-                                    avvio.configure(text = 'ESEGUITO')])
+                                    Utils.organize_images(),
+                                    master.switch_frame(Elaborazione)
+                                    ])
         avvio.grid(row=2,columnspan=10, pady=10, sticky=tk.NSEW)
 
 class Elaborazione(tk.Frame):
@@ -76,28 +80,40 @@ class Elaborazione(tk.Frame):
         tk.Frame.__init__(self, master)
         self.canvas = tk.Canvas(self, borderwidth=0, background="#ffffff", width=700, height=700)
         self.frame = tk.Frame(self.canvas, background="#ffffff")
+        self.settings = tk.Frame(self, background="#ffffff")
         self.canvas.grid_rowconfigure(0, weight=1)
         self.canvas.grid_columnconfigure(0, weight=1)
         self.vsb = tk.Scrollbar(self, orient="vertical", command=self.canvas.yview)
         self.canvas.configure(yscrollcommand=self.vsb.set)
         self.canvas.grid(row=0,column=0, sticky=tk.NSEW)
         self.vsb.grid(row=0, column=1, sticky=tk.NSEW)
+        self.settings.grid(row=0, column = 2, sticky=tk.NSEW)
 
 
 
         self.canvas.create_window((4, 4), window=self.frame, anchor="nw",
                                   tags="self.frame")
-
         self.frame.bind("<Configure>", self.onFrameConfigure)
-
-
-
         self.populate()
 
-        tk.Button(self, text="CREATE HEATMAP", command=Utils.generazione_heatmap).grid(row=1, columnspan=2, sticky=tk.NSEW)
+        tk.Button(self, text="CREATE HEATMAP", command=lambda:[
+                                                                Utils.set_Pixel_Intensity(var_pix_int.get()),
+                                                                Utils.set_Around_Pixel_Intensity(var_pix_int_vic.get()),
+                                                                Utils.readconfig(),
+                                                                Utils.generazione_heatmap()
+                                                               ]).grid(row=1, columnspan=3, sticky=tk.NSEW)
 
-
-
+        var_pix_int = tk.IntVar(self)
+        var_pix_int.set(Utils.intensita_pixel)
+        tk.Label(self.settings, text =  "PIXEL INTENSITY", background="#ffffff").grid(row=0, column=0, sticky= tk.NSEW)
+        PI = tk.Spinbox(self.settings, from_=1, to=5, textvariable=var_pix_int, background="#ffffff")
+        PI.grid(row=1, column=0, padx=5, sticky= tk.NSEW)
+        var_pix_int_vic = tk.IntVar(self)
+        var_pix_int_vic.set(Utils.intensita_p_vicini)
+        tk.Label(self.settings, text="RANGE OF PIXEL COLOURATION", background="#ffffff").grid(row=2, column=0, sticky= tk.NSEW)
+        PI_V = tk.Spinbox(self.settings, from_=0, to=5, textvariable=var_pix_int_vic, background="#ffffff")
+        PI_V.grid(row=3, column=0, padx=5, sticky= tk.NSEW)
+        tk.Button(self.settings, text= "RELOAD SCREEN", command=self.refresh, background="#ffffff").grid(row=4, column=0, sticky=tk.NSEW)
 
     def populate(self):
             btn_img = []
@@ -107,6 +123,9 @@ class Elaborazione(tk.Frame):
             ants = []
             padx = 10
             pady=10
+            if(len(images) == 0):
+                self.no_screenshot()
+
             for i in range( len(images)):
                 ants.append(tk.PhotoImage(file=images[i]))
                 ants[i] = ants[i].subsample(3,3)
@@ -126,8 +145,6 @@ class Elaborazione(tk.Frame):
                 btn_remove[i].grid(row = i, column = 1, sticky=tk.NS, padx = padx, pady = pady)
                 btn_rem_disk[i].grid(row = i, column = 2, sticky=tk.NS, padx = padx, pady = pady)
 
-
-
     def onFrameConfigure(self, event):
             '''Reset the scroll region to encompass the inner frame'''
             self.canvas.configure(scrollregion=self.canvas.bbox("all"))
@@ -141,7 +158,15 @@ class Elaborazione(tk.Frame):
 
     def refresh(self):
         self.destroy()
+        Utils.organize_images(),
         self.master.switch_frame(Elaborazione)
+
+    def no_screenshot(self):
+        top = tk.Toplevel()
+        tk.Label(top, text= """HEY BRO, SEEMS LIKE YOU HAVEN'T GOT SCREENSHOTS YET.
+    WHERE DO YOU WANNA GET BACK?""").grid(row=0, columnspan=2)
+        tk.Button(top, text= "HOMEPAGE", command=lambda: [self.master.switch_frame(Home), top.destroy()]).grid(row=1, column=0)
+        tk.Button(top, text= "SCREENSHOT", command=lambda: [self.master.switch_frame(Screenshot), top.destroy()]).grid(row=1, column=1)
 
 
 

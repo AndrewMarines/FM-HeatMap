@@ -1,9 +1,14 @@
 import cv2
 import numpy as np
 import GUI
+import os
 np.set_printoptions(threshold=np.inf)
 
 def programma():
+    if not os.path.exists('movimenti'):
+        os.mkdir('movimenti')
+    if not os.path.exists('elab_movimenti'):
+        os.mkdir('elab_movimenti')
     GUI.main()
 
 
