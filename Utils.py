@@ -8,6 +8,8 @@ from datetime import datetime
 import os
 import shutil
 import mouse
+import ctypes
+user32 = ctypes.windll.user32
 
 
 intensita_pixel=3
@@ -114,7 +116,7 @@ def read_bar():
             save_config()
 
 
-    img = ImageGrab.grab(bbox=(0, 0, 1920, 1080))  # x, y, w, h.
+    img = ImageGrab.grab(bbox=(0, 0, user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)))  # x, y, w, h.
     img_np = np.array(img)
     RGB_img = cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB)
     cv2.putText(img=RGB_img, text='CLICK THE END OF THE TIME BAR', org=(100, 100), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale=3,
