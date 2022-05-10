@@ -19,16 +19,17 @@ class GUI_APP(tk.Tk):
         if self._frame is not None:
             self._frame.destroy()
         self._frame = new_frame
+
         self._frame.pack()
 
 class Home(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
-
+        master.title("HOMEPAGE")
         screenshot_icon = tk.PhotoImage(file="src/screenshot.png")
         screenshot_icon = screenshot_icon.subsample(3, 3)
         ss = tk.Button(self, text='Screenshot', image=screenshot_icon,
-                    compound=tk.TOP, command=lambda:master.switch_frame(Screenshot))
+                    compound=tk.TOP, command=lambda:master.switch_frame(Screenshot), background="#ffffff")
         ss.image = screenshot_icon
         ss.pack(side=tk.LEFT)
 
@@ -37,7 +38,7 @@ class Home(tk.Frame):
         #hm = tk.Button(self, text='Heatmap', image=heatmap_icon,
         #            compound=tk.TOP, command=Utils.generazione_heatmap)
         hm = tk.Button(self, text='Heatmap', image=heatmap_icon,
-                    compound=tk.TOP, command=lambda:[Utils.organize_images(), master.switch_frame(Elaborazione) ])
+                    compound=tk.TOP, command=lambda:[Utils.organize_images(), master.switch_frame(Elaborazione)], background="#ffffff")
         hm.image = heatmap_icon
         hm.pack(side=tk.RIGHT)
 
@@ -46,16 +47,21 @@ class Home(tk.Frame):
 class Screenshot(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
-        tk.Label(self, text="INGAME SECONDS PER SCREENSHOT").grid(row=0, column=0, padx= 5)
+        master.title("SCREENSHOT")
+        self.columnconfigure(1, weight=1)
+        self.rowconfigure(1, weight=1)
+        tk.Button(self, text="HOMEPAGE", command=lambda: master.switch_frame(Home), background="#ffffff").grid(
+            row=0, column=0,sticky=tk.NW)
+        tk.Label(self, text="INGAME SECONDS PER SCREENSHOT").grid(row=1, column=0, padx= 5)
         var_ts = tk.IntVar(self)
         var_ts.set(Utils.ingame_seconds_per_screenshot)
         TS = tk.Spinbox(self, from_=1, to=5000, textvariable= var_ts)
-        TS.grid(row=0, column=1, padx= 5)
+        TS.grid(row=1, column=1, padx= 5)
         var_ns = tk.IntVar(self)
         var_ns.set(Utils. number_of_screenshot)
-        tk.Label(self, text="Number Of Screenshots").grid(row=1, column=0, padx=5)
+        tk.Label(self, text="Number Of Screenshots").grid(row=2, column=0, padx=5)
         NS = tk.Spinbox(self, from_=1, to=200,textvariable=var_ns)
-        NS.grid(row=1, column=1, padx=5)
+        NS.grid(row=2, column=1, padx=5, pady=70)
 
         img = Image.fromarray(Utils.ant_screenshot())
         Screenshot = ImageTk.PhotoImage(image = img)
@@ -63,7 +69,7 @@ class Screenshot(tk.Frame):
         Screen = tk.Button(self, image = Screenshot, command =lambda: [Utils.find_coords(),
                                                                        master.switch_frame(Home)])
         Screen.image = Screenshot
-        Screen.grid(row = 0, column=2, padx=20, pady=20,rowspan=2)
+        Screen.grid(row = 0, column=2, padx=20, pady=20,rowspan=4)
 
         avvio = tk.Button(self, text="START",
                   command=lambda: [
@@ -73,11 +79,12 @@ class Screenshot(tk.Frame):
                                     Utils.organize_images(),
                                     master.switch_frame(Elaborazione)
                                     ])
-        avvio.grid(row=2,columnspan=10, pady=10, sticky=tk.NSEW)
+        avvio.grid(row=5,columnspan=10, pady=10, sticky=tk.NSEW)
 
 class Elaborazione(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
+        master.title("HEATMAP")
         self.canvas = tk.Canvas(self, borderwidth=0, background="#ffffff", width=700, height=700)
         self.frame = tk.Frame(self.canvas, background="#ffffff")
         self.settings = tk.Frame(self, background="#ffffff")
@@ -105,15 +112,17 @@ class Elaborazione(tk.Frame):
 
         var_pix_int = tk.IntVar(self)
         var_pix_int.set(Utils.intensita_pixel)
-        tk.Label(self.settings, text =  "PIXEL INTENSITY", background="#ffffff").grid(row=0, column=0, sticky= tk.NSEW)
+        tk.Button(self.settings, text="HOMEPAGE", command=lambda:master.switch_frame(Home), background="#ffffff").grid(row=0, column=0, pady=5)
+
+        tk.Label(self.settings, text =  "PIXEL INTENSITY", background="#ffffff").grid(row=1, column=0, sticky= tk.NSEW)
         PI = tk.Spinbox(self.settings, from_=1, to=5, textvariable=var_pix_int, background="#ffffff")
-        PI.grid(row=1, column=0, padx=5, sticky= tk.NSEW)
+        PI.grid(row=2, column=0, padx=5, sticky= tk.NSEW)
         var_pix_int_vic = tk.IntVar(self)
         var_pix_int_vic.set(Utils.intensita_p_vicini)
-        tk.Label(self.settings, text="RANGE OF PIXEL COLOURATION", background="#ffffff").grid(row=2, column=0, sticky= tk.NSEW)
+        tk.Label(self.settings, text="RANGE OF PIXEL COLOURATION", background="#ffffff").grid(row=3, column=0, sticky= tk.NSEW)
         PI_V = tk.Spinbox(self.settings, from_=0, to=5, textvariable=var_pix_int_vic, background="#ffffff")
-        PI_V.grid(row=3, column=0, padx=5, sticky= tk.NSEW)
-        tk.Button(self.settings, text= "RELOAD SCREEN", command=self.refresh, background="#ffffff").grid(row=4, column=0, sticky=tk.NSEW)
+        PI_V.grid(row=4, column=0, padx=5, sticky= tk.NSEW)
+        tk.Button(self.settings, text= "RELOAD SCREEN", command=self.reload, background="#ffffff").grid(row=5, column=0, sticky=tk.NSEW)
 
     def populate(self):
             btn_img = []
@@ -158,11 +167,16 @@ class Elaborazione(tk.Frame):
 
     def refresh(self):
         self.destroy()
-        Utils.organize_images(),
+        self.master.switch_frame(Elaborazione)
+
+    def reload(self):
+        self.destroy()
+        Utils.organize_images()
         self.master.switch_frame(Elaborazione)
 
     def no_screenshot(self):
         top = tk.Toplevel()
+        top.title("NO SCREENSHOT AVAILABLE")
         tk.Label(top, text= """HEY BRO, SEEMS LIKE YOU HAVEN'T GOT SCREENSHOTS YET.
     WHERE DO YOU WANNA GET BACK?""").grid(row=0, columnspan=2)
         tk.Button(top, text= "HOMEPAGE", command=lambda: [self.master.switch_frame(Home), top.destroy()]).grid(row=1, column=0)
@@ -176,5 +190,6 @@ class Elaborazione(tk.Frame):
 def main():
     Utils.readconfig()
     app = GUI_APP()
+    app.configure(background='white')
     app.resizable(False, False)
     app.mainloop()
