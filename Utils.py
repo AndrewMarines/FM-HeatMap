@@ -111,12 +111,15 @@ def read_bar():
             # displaying the coordinates
             # on the Shell
             cv2.destroyWindow("image")
-            x_bar = x
-            y_bar = y
+            x_bar =  int(x + user32.GetSystemMetrics(0)/2)
+            print(x)
+            print(x_bar)
+            y_bar = int(y + (user32.GetSystemMetrics(1)*10)/100)
             save_config()
 
-
     img = ImageGrab.grab(bbox=(int(user32.GetSystemMetrics(0)/2), int(0 + (user32.GetSystemMetrics(1)*10)/100), user32.GetSystemMetrics(0), int(user32.GetSystemMetrics(1) - (user32.GetSystemMetrics(1)*10)/100)))  # x, y, w, h.
+
+
     img_np = np.array(img)
     RGB_img = cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB)
     cv2.putText(img=RGB_img, text='CLICK THE END OF THE TIME BAR', org=(100, 100), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale=3,
