@@ -93,7 +93,7 @@ def find_coords():
             cv2.destroyWindow("image")
             save_config()
 
-    img = ImageGrab.grab(bbox=(0, 0, 1920, 1080))  # x, y, w, h.
+    img = ImageGrab.grab(bbox=(0, 0, user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)))  # x, y, w, h.
     img_np = np.array(img)
     RGB_img = cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB)
     cv2.imshow('image', RGB_img)
@@ -122,8 +122,6 @@ def read_bar():
 
     img_np = np.array(img)
     RGB_img = cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB)
-    cv2.putText(img=RGB_img, text='CLICK THE END OF THE TIME BAR', org=(100, 100), fontFace=cv2.FONT_HERSHEY_TRIPLEX, fontScale=3,
-                color=(0, 255, 0))
     cv2.imshow('image', RGB_img)
 
     cv2.setMouseCallback('image', click_event)
