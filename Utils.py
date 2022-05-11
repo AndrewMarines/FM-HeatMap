@@ -9,6 +9,7 @@ import os
 import shutil
 import mouse
 import ctypes
+import GUI
 user32 = ctypes.windll.user32
 
 
@@ -28,9 +29,9 @@ upper = np.array([40,170,255])
 CONF_FILE = "config.ini"
 config = configparser.ConfigParser()
 
-def screenshot():
+def screenshot(master):
 
-    read_bar()
+    read_bar(master)
     readconfig()
     x = 0
     print(number_of_screenshot)
@@ -60,7 +61,7 @@ def ant_screenshot():
     RGB_img = cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB)
     return RGB_img
 
-def find_coords():
+def find_coords(master):
 
     def click_event(event, x, y, flags, params):
         global x_finale
@@ -87,8 +88,9 @@ def find_coords():
             # on the Shell
             x_finale = x
             y_finale = y
-            cv2.destroyWindow("image")
             save_config()
+            cv2.destroyWindow("image")
+            master.state('normal')
 
     img = ImageGrab.grab(bbox=(0, 0, user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)))  # x, y, w, h.
     img_np = np.array(img)
@@ -96,7 +98,7 @@ def find_coords():
     cv2.imshow('image', RGB_img)
     cv2.setMouseCallback('image', click_event)
 
-def read_bar():
+def read_bar(master):
     def click_event(event, x, y, flags, params):
         global x_bar
         global y_bar
@@ -116,7 +118,7 @@ def read_bar():
 
     img = ImageGrab.grab(bbox=(int(user32.GetSystemMetrics(0)/2), int(0 + (user32.GetSystemMetrics(1)*10)/100), user32.GetSystemMetrics(0), int(user32.GetSystemMetrics(1) - (user32.GetSystemMetrics(1)*10)/100)))  # x, y, w, h.
 
-
+    master.iconify()
     img_np = np.array(img)
     RGB_img = cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB)
     cv2.imshow('image', RGB_img)
@@ -196,6 +198,9 @@ def generazione_heatmap():
     Campo = cv2.imread("src//Campo.png")
     Campo = cv2.resize(Campo, (x_campo, y_campo))
     heatmapshow = cv2.addWeighted(Campo, 1, heatmapshow, 2, 0)
+    now = datetime.now()  # current date and time
+    file_name = str(now.strftime("%m-%d-%Y %H-%M-%S"))
+    cv2.imwrite('HEATMAPS/' + file_name + '.png', heatmapshow)
     cv2.imshow('Heatmap', heatmapshow)
     cv2.waitKey(0)
 

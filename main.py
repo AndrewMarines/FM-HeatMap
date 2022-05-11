@@ -9,6 +9,8 @@ def programma():
         os.mkdir('movimenti')
     if not os.path.exists('elab_movimenti'):
         os.mkdir('elab_movimenti')
+    if not os.path.exists('HEATMAPS'):
+        os.mkdir('HEATMAPS')
     GUI.main()
 
 

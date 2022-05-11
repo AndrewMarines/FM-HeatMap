@@ -35,8 +35,6 @@ class Home(tk.Frame):
 
         heatmap_icon = tk.PhotoImage(file="src/heatmap.png")
         heatmap_icon = heatmap_icon.subsample(3, 3)
-        #hm = tk.Button(self, text='Heatmap', image=heatmap_icon,
-        #            compound=tk.TOP, command=Utils.generazione_heatmap)
         hm = tk.Button(self, text='Heatmap', image=heatmap_icon,
                     compound=tk.TOP, command=lambda:[Utils.organize_images(), master.switch_frame(Elaborazione)], background="#ffffff")
         hm.image = heatmap_icon
@@ -64,22 +62,30 @@ class Screenshot(tk.Frame):
         NS.grid(row=2, column=1, padx=5, pady=70)
 
         img = Image.fromarray(Utils.ant_screenshot())
-        Screenshot = ImageTk.PhotoImage(image = img)
-        Screenshot = Screenshot._PhotoImage__photo.subsample(2, 2)
-        Screen = tk.Button(self, image = Screenshot, command =lambda: [Utils.find_coords(),
-                                                                       master.switch_frame(Home)])
-        Screen.image = Screenshot
+        img_Screenshot = ImageTk.PhotoImage(image = img)
+        img_Screenshot = img_Screenshot._PhotoImage__photo.subsample(2, 2)
+        Screen = tk.Button(self, image = img_Screenshot, command =lambda: [
+                                                                        master.iconify(),
+                                                                        time.sleep(0.5),
+                                                                        Utils.find_coords(master),
+                                                                        self.master.switch_frame(Home)
+                                                                        ])
+        Screen.image = img_Screenshot
         Screen.grid(row = 0, column=2, padx=20, pady=20,rowspan=4)
 
         avvio = tk.Button(self, text="START",
                   command=lambda: [
                                     Utils.set_Time_Screen(var_ts.get()),
                                     Utils.set_Number_Screenshot(var_ns.get()),
-                                    Utils.screenshot(),
+                                    Utils.screenshot(master),
                                     Utils.organize_images(),
+                                    master.state('normal'),
                                     master.switch_frame(Elaborazione)
                                     ])
         avvio.grid(row=5,columnspan=10, pady=10, sticky=tk.NSEW)
+
+
+
 
 class Elaborazione(tk.Frame):
     def __init__(self, master):
