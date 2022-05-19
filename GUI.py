@@ -6,6 +6,7 @@ import glob
 import os
 import cv2
 import time
+import easygui
 
 class GUI_APP(tk.Tk):
     def __init__(self):
@@ -113,7 +114,8 @@ class Elaborazione(tk.Frame):
                                                                 Utils.set_Pixel_Intensity(var_pix_int.get()),
                                                                 Utils.set_Around_Pixel_Intensity(var_pix_int_vic.get()),
                                                                 Utils.readconfig(),
-                                                                Utils.generazione_heatmap()
+                                                                self.heatmap_finale()
+
                                                                ]).grid(row=1, columnspan=3, sticky=tk.NSEW)
 
         var_pix_int = tk.IntVar(self)
@@ -129,6 +131,27 @@ class Elaborazione(tk.Frame):
         PI_V = tk.Spinbox(self.settings, from_=0, to=5, textvariable=var_pix_int_vic, background="#ffffff")
         PI_V.grid(row=4, column=0, padx=5, sticky= tk.NSEW)
         tk.Button(self.settings, text= "RELOAD SCREEN", command=self.reload, background="#ffffff").grid(row=5, column=0, sticky=tk.NSEW)
+
+    def heatmap_finale(self):
+        def salva_heatmap(img):
+            f_out=easygui.filesavebox("Select a output file",title="SAVE HEATMAP", default = "HEATMAP", filetypes= ".png")
+            if ".png" in f_out:
+                cv2.imwrite(f_out, img)
+            else:
+                cv2.imwrite(f_out+".png", img)
+        top = tk.Toplevel()
+        top.title("Heatmap")
+        original_img = Utils.generazione_heatmap()
+        blue, green, red = cv2.split(original_img)
+        img = cv2.merge((red, green, blue))
+        img = Image.fromarray(img)
+        img_Screenshot = ImageTk.PhotoImage(image=img)
+
+        # Create a Label to display the image
+        tk.Label(top, image=img_Screenshot).grid(row=0, column=0)
+        tk.Button(top, text = "SAVE HEATMAP", command = lambda: salva_heatmap(original_img)).grid(row=1, column = 0)
+        top.mainloop()
+
 
     def populate(self):
             btn_img = []
@@ -168,7 +191,6 @@ class Elaborazione(tk.Frame):
         images = glob.glob('elab_movimenti/*.png')
         image = cv2.imread(images[i])
         cv2.imshow(images[i], image)
-        # add wait key. window waits until user presses a key
         cv2.waitKey(0)
 
     def refresh(self):

@@ -28,7 +28,10 @@ lower = np.array([0,0,120])
 upper = np.array([40,170,255])
 CONF_FILE = "config.ini"
 config = configparser.ConfigParser()
-
+def get_time():
+    now = datetime.now()  # current date and time
+    time = str(now.strftime("%m-%d-%Y %H-%M-%S"))
+    return time
 def screenshot(master):
 
     read_bar(master)
@@ -200,9 +203,8 @@ def generazione_heatmap():
     heatmapshow = cv2.addWeighted(Campo, 1, heatmapshow, 2, 0)
     now = datetime.now()  # current date and time
     file_name = str(now.strftime("%m-%d-%Y %H-%M-%S"))
-    cv2.imwrite('HEATMAPS/' + file_name + '.png', heatmapshow)
-    cv2.imshow('Heatmap', heatmapshow)
-    cv2.waitKey(0)
+
+    return heatmapshow
 
 def set_Time_Screen(ts):
     global ingame_seconds_per_screenshot
