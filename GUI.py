@@ -8,7 +8,7 @@ import os
 import cv2
 import time
 import easygui
-
+import subprocess
 
 class GUI_APP(tk.Tk):
     def __init__(self):
@@ -71,6 +71,12 @@ class Screenshot(tk.Frame):
         NS = tk.Spinbox(self, from_=1, to=200, textvariable=var_ns)
         NS.grid(row=2, column=1, padx=5, pady=70)
 
+        match_name = tk.StringVar(self)
+        match_name.set(Utils.get_time())
+        tk.Label(self, text="Match Name").grid(row=3, column=0, padx=5)
+        match_name_entry = tk.Entry(self, textvariable=match_name)
+        match_name_entry.grid(row = 3, column = 1, padx = 5)
+
         # PREVIEW
         img = Image.fromarray(Utils.ant_screenshot())
         img_Screenshot = ImageTk.PhotoImage(image=img)
@@ -82,18 +88,18 @@ class Screenshot(tk.Frame):
             self.master.switch_frame(Home)
         ])
         Screen.image = img_Screenshot
-        Screen.grid(row=0, column=2, padx=20, pady=20, rowspan=4)
+        Screen.grid(row=0, column=2, padx=20, pady=20, rowspan=5)
 
         avvio = tk.Button(self, text="START",
                           command=lambda: [
                               Utils.set_Time_Screen(var_ts.get()),
                               Utils.set_Number_Screenshot(var_ns.get()),
-                              Utils.screenshot(master),
+                              Utils.screenshot(master, match_name.get()),
                               Utils.organize_images(),
                               master.state('normal'),
                               master.switch_frame(Elaborazione)
                           ])
-        avvio.grid(row=5, columnspan=10, pady=10, sticky=tk.NSEW)
+        avvio.grid(row=6, columnspan=10, pady=10, sticky=tk.NSEW)
 
 
 class Elaborazione(tk.Frame):
@@ -138,7 +144,9 @@ class Elaborazione(tk.Frame):
         PI_V = tk.Spinbox(self.settings, from_=0, to=5, textvariable=var_pix_int_vic, background="#ffffff")
         PI_V.grid(row=4, column=0, padx=5, sticky=tk.NSEW)
         tk.Button(self.settings, text="RELOAD SCREEN", command=self.reload, background="#ffffff").grid(row=5, column=0,
-                                                                                                       sticky=tk.NSEW)
+                                                                                                       sticky=tk.NSEW, pady=5)
+        tk.Button(self.settings, text = "OPEN QUEUE DIRECTORY", background="#ffffff", command = lambda : subprocess.Popen('explorer "elab_movimenti"')).grid(row=6, column=0, sticky=tk.NSEW, pady=5)
+        tk.Button(self.settings, text = "OPEN GENERAL DIRECTORY", background="#ffffff", command = lambda : subprocess.Popen('explorer "movimenti"')).grid(row=7, column=0, sticky=tk.NSEW, pady=5)
 
     def heatmap_finale(self):
         def salva_heatmap(img):
@@ -167,8 +175,7 @@ class Elaborazione(tk.Frame):
         btn_remove = []
         btn_rem_disk = []
         path = "elab_movimenti"
-        if not os.path.exists(path + '/DEFAULT'):
-            os.mkdir(path + '/DEFAULT')
+
         directories = glob.glob(path + "/*/", recursive=True)
         all_images = glob.glob(path + "/**/*.png", recursive=True)
 
@@ -188,6 +195,8 @@ class Elaborazione(tk.Frame):
                 if(d in f):
                     contenuto = True
             if(not contenuto):
+                if not os.path.exists(path + '/DEFAULT'):
+                    os.mkdir(path + '/DEFAULT')
                 shutil.move(f, path + '/DEFAULT')
         all_images = glob.glob(path + "/**/*.png", recursive=True)
         index_dir = -1
@@ -195,6 +204,11 @@ class Elaborazione(tk.Frame):
             d_string = directories[d].upper()
             d_string = d_string.replace("ELAB_MOVIMENTI\\", "").replace("\\","")
             tk.Label(self.frame, text = d_string, background="#ffffff").grid(row = index_dir + 1 , column = 0)
+            btn_remove_dir.append(tk.Button(self.frame, text = "REMOVE FROM QUEUE", command= lambda c = d: [shutil.rmtree(directories[c]),
+                                                                                                            self.refresh()]))
+            btn_remove_dir[d]. grid(row = index_dir + 1 , column = 1, columnspan= 2, sticky = tk.NSEW)
+
+
             images = glob.glob(directories[d] + '/*.png')
 
             for i in range(len(images)):

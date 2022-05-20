@@ -36,12 +36,11 @@ def get_time():
     return formatted_time
 
 
-def screenshot(master):
+def screenshot(master, folder):
     read_bar(master)
     readconfig()
     x = 0
     while (x < number_of_screenshot):
-        print(x)
         now = datetime.now()  # current date and time
         file_name = str(now.strftime("%m-%d-%Y %H-%M-%S"))
         print(file_name)
@@ -54,9 +53,10 @@ def screenshot(master):
         img = ImageGrab.grab(bbox=(x_iniziale, y_iniziale, x_finale, y_finale))  # x, y, w, h.
         img_np = np.array(img)
         rgb_img = cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB)
-        cv2.imwrite("movimenti/" + file_name + ".png", rgb_img)
+        cv2.imwrite("movimenti/" + folder + '/' + file_name + ".png", rgb_img)
         x += 1
-    path = os.path.abspath("movimenti/")
+    path = os.path.abspath("movimen"
+                           "ti/")
     os.startfile(path)
 
 
