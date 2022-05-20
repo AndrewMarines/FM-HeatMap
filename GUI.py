@@ -9,6 +9,7 @@ import cv2
 import time
 import easygui
 import subprocess
+import numpy as np
 
 class GUI_APP(tk.Tk):
     def __init__(self):
@@ -237,12 +238,44 @@ class Elaborazione(tk.Frame):
         '''Reset the scroll region to encompass the inner frame'''
         self.canvas.configure(scrollregion=self.canvas.bbox("all"))
 
+
+
     def getImage(self, i):
+
         path = "elab_movimenti"
         images = glob.glob(path + "/**/*.png", recursive=True)
+
+        top = tk.Toplevel()
+        top.title(images[i])
+
+
+
         image = cv2.imread(images[i])
-        cv2.imshow(images[i], image)
-        cv2.waitKey(0)
+        image_frame = tk.Frame(top, background="#ffffff")
+        settings_frame = tk.Frame(top, background="#ffffff")
+        blue, green, red = cv2.split(image)
+        img = cv2.merge((red, green, blue))
+        img = Image.fromarray(img)
+        img_Screenshot = ImageTk.PhotoImage(image=img)
+        # Create a Label to display the image
+        tk.Label(image_frame, image=img_Screenshot).grid(row=0, column=0)
+
+        turn_right_icon = tk.PhotoImage(file="src/Turn_Right.png")
+        turn_right_icon = turn_right_icon.subsample(3, 3)
+        tr = tk.Button(settings_frame, image=turn_right_icon,
+                        command=lambda: [Utils.rotate_image(image, images[i]),
+                                         self.refresh(),
+                                         top.destroy(),
+                                         self.getImage(i)
+                                         ], background="#ffffff")
+        tr.image = turn_right_icon
+        tr.pack(side=tk.LEFT)
+
+        image_frame.pack(side= tk.LEFT)
+        settings_frame.pack(side=tk.RIGHT)
+
+
+        top.mainloop()
 
     def refresh(self):
         self.destroy()

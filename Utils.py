@@ -40,6 +40,8 @@ def screenshot(master, folder):
     read_bar(master)
     readconfig()
     x = 0
+    if not os.path.exists('movimenti/' + folder):
+        os.mkdir('movimenti/' + folder)
     while (x < number_of_screenshot):
         now = datetime.now()  # current date and time
         file_name = str(now.strftime("%m-%d-%Y %H-%M-%S"))
@@ -53,6 +55,7 @@ def screenshot(master, folder):
         img = ImageGrab.grab(bbox=(x_iniziale, y_iniziale, x_finale, y_finale))  # x, y, w, h.
         img_np = np.array(img)
         rgb_img = cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB)
+
         cv2.imwrite("movimenti/" + folder + '/' + file_name + ".png", rgb_img)
         x += 1
     path = os.path.abspath("movimen"
@@ -168,7 +171,8 @@ def readconfig():
 
 
 def lettura_immagini(heatmap):
-    for movimento in glob.glob('elab_movimenti/*.png'):
+    for movimento in glob.glob( "movimenti/**/*.png", recursive=True):
+
         image = cv2.imread(movimento)
         image = cv2.resize(image, (x_finale - x_iniziale, y_finale - y_iniziale))
         mask = cv2.inRange(image, lower, upper)
@@ -243,3 +247,9 @@ def organize_images():
     shutil.rmtree(path)
     shutil.copytree(source_folder, path, dirs_exist_ok=True)
     text_files = glob.glob(source_folder + "/**/*.png", recursive=True)
+
+
+def rotate_image(img, path):
+    rotated_image = np.rot90(img)
+    rotated_image = np.rot90(rotated_image)
+    cv2.imwrite(path, rotated_image)
