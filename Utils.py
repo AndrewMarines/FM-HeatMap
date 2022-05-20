@@ -19,8 +19,8 @@ ingame_seconds_per_screenshot = 40
 number_of_screenshot = 15
 x_iniziale = 0
 y_iniziale = 0
-x_finale = 10
-y_finale = 10
+x_finale = 400
+y_finale = 400
 x_bar = 0
 y_bar = 0
 
@@ -168,6 +168,7 @@ def readconfig():
         y_bar = int(config['DEFAULT']['y_bar'])
     else:
         print("NO CONFIG FILE, USING THE DEFAULT ONES")
+        save_config()
 
 
 def lettura_immagini(heatmap):
