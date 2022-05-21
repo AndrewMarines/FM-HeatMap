@@ -164,17 +164,17 @@ def readconfig():
         x_bar = int(config['DEFAULT']['x_bar'])
         y_bar = int(config['DEFAULT']['y_bar'])
     else:
-        print("NO CONFIG FILE, USING THE DEFAULT ONES")
+        print("NO CONFIG FILE, CREATING A DEFAULT ONE")
         save_config()
 
 
-def lettura_immagini(heatmap):
+def lettura_immagini(heatmap, height, width):
 
 
     for movimento in glob.glob( "elab_movimenti/**/*.png", recursive=True):
         print(movimento)
         image = cv2.imread(movimento)
-        image = cv2.resize(image, (x_finale - x_iniziale, y_finale - y_iniziale))
+        image = cv2.resize(image, (width, height))
         mask = cv2.inRange(image, lower, upper)
         coord = cv2.findNonZero(mask)
         intensita(heatmap, coord)
@@ -205,7 +205,7 @@ def generazione_heatmap():
     height = first_image.shape[0]
     width = first_image.shape[1]
     heatmap = np.zeros((height, width))
-    lettura_immagini(heatmap)
+    lettura_immagini(heatmap, height, width)
     heatmapshow = None
     heatmapshow = heatmap * 20
     heatmapshow = cv2.normalize(heatmap, heatmapshow, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)

@@ -184,7 +184,7 @@ class Elaborazione(tk.Frame):
         original_img = Utils.generazione_heatmap()
         height = original_img.shape[0]
         width = original_img.shape[1]
-        color = (255, 0, 0)
+        color = (0, 0, 255)
         thickness = 9
         if (direction == "RIGHT"):
             start_point = (int(width / 2 - 100), 25)
@@ -201,10 +201,6 @@ class Elaborazione(tk.Frame):
                                            color, thickness)
         blue, green, red = cv2.split(original_img)
         img = cv2.merge((red, green, blue))
-
-
-
-
 
         img = Image.fromarray(img)
         img_Screenshot = ImageTk.PhotoImage(image=img)
