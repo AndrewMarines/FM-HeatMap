@@ -11,6 +11,16 @@ import easygui
 import subprocess
 import numpy as np
 
+ATTACKING_DIRECTION = "ATTACKING DIRECTION"
+SCREENSHOT = 'Screenshot'
+HOME = "HOMEPAGE"
+HEATMAP = "HEATMAP"
+DEFAULT_HEATMAP_NAME = "HEATMAP"
+MATCH_NAME = "MATCH"
+SECONDS_PER_SCREENSHOT = "INGAME SECONDS PER SCREENSHOT"
+NUMBER_OF_SCREENSHOT = "Number Of Screenshots"
+START = "START"
+
 class GUI_APP(tk.Tk):
     def __init__(self):
         tk.Tk.__init__(self)
@@ -30,12 +40,12 @@ class GUI_APP(tk.Tk):
 class Home(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
-        master.title("HOMEPAGE")
+        master.title(HOME)
 
         # SCREENSHOT SECTION
         screenshot_icon = tk.PhotoImage(file="src/screenshot.png")
         screenshot_icon = screenshot_icon.subsample(3, 3)
-        ss = tk.Button(self, text='Screenshot', image=screenshot_icon,
+        ss = tk.Button(self, text=SCREENSHOT, image=screenshot_icon,
                        compound=tk.TOP, command=lambda: master.switch_frame(Screenshot), background="#ffffff")
         ss.image = screenshot_icon
         ss.pack(side=tk.LEFT)
@@ -53,28 +63,28 @@ class Home(tk.Frame):
 class Screenshot(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
-        master.title("SCREENSHOT")
+        master.title(SCREENSHOT)
         self.columnconfigure(1, weight=1)
         self.rowconfigure(1, weight=1)
 
-        tk.Button(self, text="HOMEPAGE", command=lambda: master.switch_frame(Home), background="#ffffff").grid(
+        tk.Button(self, text=HOME, command=lambda: master.switch_frame(Home), background="#ffffff").grid(
             row=0, column=0, sticky=tk.NW)
 
         # SPINBOXES
-        tk.Label(self, text="INGAME SECONDS PER SCREENSHOT").grid(row=1, column=0, padx=5)
+        tk.Label(self, text=SECONDS_PER_SCREENSHOT).grid(row=1, column=0, padx=5)
         var_ts = tk.IntVar(self)
         var_ts.set(Utils.ingame_seconds_per_screenshot)
         TS = tk.Spinbox(self, from_=1, to=5000, textvariable=var_ts)
         TS.grid(row=1, column=1, padx=5)
         var_ns = tk.IntVar(self)
         var_ns.set(Utils.number_of_screenshot)
-        tk.Label(self, text="Number Of Screenshots").grid(row=2, column=0, padx=5)
+        tk.Label(self, text = NUMBER_OF_SCREENSHOT).grid(row=2, column=0, padx=5)
         NS = tk.Spinbox(self, from_=1, to=200, textvariable=var_ns)
         NS.grid(row=2, column=1, padx=5, pady=70)
 
         match_name = tk.StringVar(self)
         match_name.set(Utils.get_time())
-        tk.Label(self, text="Match Name").grid(row=3, column=0, padx=5)
+        tk.Label(self, text=MATCH_NAME).grid(row=3, column=0, padx=5)
         match_name_entry = tk.Entry(self, textvariable=match_name)
         match_name_entry.grid(row = 3, column = 1, padx = 5)
 
@@ -91,7 +101,7 @@ class Screenshot(tk.Frame):
         Screen.image = img_Screenshot
         Screen.grid(row=0, column=2, padx=20, pady=20, rowspan=5)
 
-        avvio = tk.Button(self, text="START",
+        avvio = tk.Button(self, text=START,
                           command=lambda: [
                               Utils.set_Time_Screen(var_ts.get()),
                               Utils.set_Number_Screenshot(var_ns.get()),
@@ -106,7 +116,7 @@ class Screenshot(tk.Frame):
 class Elaborazione(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
-        master.title("HEATMAP")
+        master.title(HEATMAP)
         self.canvas = tk.Canvas(self, borderwidth=0, background="#ffffff", width=700, height=700)
         self.frame = tk.Frame(self.canvas, background="#ffffff")
         self.settings = tk.Frame(self, background="#ffffff")
@@ -123,16 +133,16 @@ class Elaborazione(tk.Frame):
         self.frame.bind("<Configure>", self.onFrameConfigure)
         self.populate()
 
-        tk.Button(self, text="CREATE HEATMAP", command=lambda: [
+        tk.Button(self, text = START, command=lambda: [
             Utils.set_Pixel_Intensity(var_pix_int.get()),
             Utils.set_Around_Pixel_Intensity(var_pix_int_vic.get()),
             Utils.readconfig(),
-            self.heatmap_finale()
+            self.heatmap_finale(variable.get())
         ]).grid(row=1, columnspan=3, sticky=tk.NSEW)
 
         var_pix_int = tk.IntVar(self)
         var_pix_int.set(Utils.intensita_pixel)
-        tk.Button(self.settings, text="HOMEPAGE", command=lambda: master.switch_frame(Home), background="#ffffff").grid(
+        tk.Button(self.settings, text=HOME, command=lambda: master.switch_frame(Home), background="#ffffff").grid(
             row=0, column=0, pady=5)
 
         tk.Label(self.settings, text="PIXEL INTENSITY", background="#ffffff").grid(row=1, column=0, sticky=tk.NSEW)
@@ -149,9 +159,20 @@ class Elaborazione(tk.Frame):
         tk.Button(self.settings, text = "OPEN QUEUE DIRECTORY", background="#ffffff", command = lambda : subprocess.Popen('explorer "elab_movimenti"')).grid(row=6, column=0, sticky=tk.NSEW, pady=5)
         tk.Button(self.settings, text = "OPEN GENERAL DIRECTORY", background="#ffffff", command = lambda : subprocess.Popen('explorer "movimenti"')).grid(row=7, column=0, sticky=tk.NSEW, pady=5)
 
-    def heatmap_finale(self):
+        #ATTACKING DIRECTION
+        DIRECTION = [
+            "NONE",
+            "LEFT",
+            "RIGHT"
+        ]
+        variable = tk.StringVar(master)
+        variable.set(DIRECTION[0])  # default value
+        tk.Label(self.settings, text =ATTACKING_DIRECTION, background="#ffffff").grid(row=7, column=0, sticky=tk.NSEW)
+        MENU_DIRECTION = tk.OptionMenu(self.settings, variable, *DIRECTION).grid(row=8, column=0, sticky=tk.NSEW)
+
+    def heatmap_finale(self, direction):
         def salva_heatmap(img):
-            f_out = easygui.filesavebox("Select a output file", title="SAVE HEATMAP", default="HEATMAP",
+            f_out = easygui.filesavebox("Select an output file", title="SAVE HEATMAP", default=DEFAULT_HEATMAP_NAME,
                                         filetypes=".png")
             if ".png" in f_out:
                 cv2.imwrite(f_out, img)
@@ -159,13 +180,34 @@ class Elaborazione(tk.Frame):
                 cv2.imwrite(f_out + ".png", img)
 
         top = tk.Toplevel()
-        top.title("Heatmap")
+        top.title(HEATMAP)
         original_img = Utils.generazione_heatmap()
+        height = original_img.shape[0]
+        width = original_img.shape[1]
+        color = (255, 0, 0)
+        thickness = 9
+        if (direction == "RIGHT"):
+            start_point = (int(width / 2 - 100), 25)
+            end_point = (int(width / 2 + 100), 25)
+
+            original_img = cv2.arrowedLine(original_img, start_point, end_point,
+                                           color, thickness)
+        elif (direction == "LEFT"):
+            start_point = (int(width / 2 + 100), 20)
+            end_point = (int(width / 2 - 100), 20)
+
+
+            original_img = cv2.arrowedLine(original_img, start_point, end_point,
+                                           color, thickness)
         blue, green, red = cv2.split(original_img)
         img = cv2.merge((red, green, blue))
+
+
+
+
+
         img = Image.fromarray(img)
         img_Screenshot = ImageTk.PhotoImage(image=img)
-
         # Create a Label to display the image
         tk.Label(top, image=img_Screenshot).grid(row=0, column=0)
         tk.Button(top, text="SAVE HEATMAP", command=lambda: salva_heatmap(original_img)).grid(row=1, column=0)
@@ -291,9 +333,9 @@ class Elaborazione(tk.Frame):
         top.title("NO SCREENSHOT AVAILABLE")
         tk.Label(top, text="""HEY BRO, SEEMS LIKE YOU HAVEN'T GOT SCREENSHOTS YET.
     WHERE DO YOU WANNA GET BACK?""").grid(row=0, columnspan=2)
-        tk.Button(top, text="HOMEPAGE", command=lambda: [self.master.switch_frame(Home), top.destroy()]).grid(row=1,
+        tk.Button(top, text=HOME, command=lambda: [self.master.switch_frame(Home), top.destroy()]).grid(row=1,
                                                                                                               column=0)
-        tk.Button(top, text="SCREENSHOT", command=lambda: [self.master.switch_frame(Screenshot), top.destroy()]).grid(
+        tk.Button(top, text=SCREENSHOT, command=lambda: [self.master.switch_frame(Screenshot), top.destroy()]).grid(
             row=1, column=1)
 
 

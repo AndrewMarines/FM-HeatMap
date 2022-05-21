@@ -10,7 +10,7 @@ import shutil
 import mouse
 import ctypes
 import GUI
-
+from multiprocessing import Process
 user32 = ctypes.windll.user32
 
 intensita_pixel = 3
@@ -43,9 +43,7 @@ def screenshot(master, folder):
     if not os.path.exists('movimenti/' + folder):
         os.mkdir('movimenti/' + folder)
     while (x < number_of_screenshot):
-        now = datetime.now()  # current date and time
-        file_name = str(now.strftime("%m-%d-%Y %H-%M-%S"))
-        print(file_name)
+        file_name = get_time()
         for s in range(ingame_seconds_per_screenshot):
             mouse.move(x_bar, y_bar)
             mouse.click('left')
@@ -58,8 +56,7 @@ def screenshot(master, folder):
 
         cv2.imwrite("movimenti/" + folder + '/' + file_name + ".png", rgb_img)
         x += 1
-    path = os.path.abspath("movimen"
-                           "ti/")
+    path = os.path.abspath("movimenti/")
     os.startfile(path)
 
 
@@ -172,14 +169,17 @@ def readconfig():
 
 
 def lettura_immagini(heatmap):
-    for movimento in glob.glob( "movimenti/**/*.png", recursive=True):
 
+
+    for movimento in glob.glob( "elab_movimenti/**/*.png", recursive=True):
+        print(movimento)
         image = cv2.imread(movimento)
         image = cv2.resize(image, (x_finale - x_iniziale, y_finale - y_iniziale))
         mask = cv2.inRange(image, lower, upper)
         coord = cv2.findNonZero(mask)
-
         intensita(heatmap, coord)
+
+
 
 
 def intensita(array, coord):
