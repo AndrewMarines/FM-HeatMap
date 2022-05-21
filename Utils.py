@@ -53,8 +53,8 @@ def screenshot(master, folder):
         img = ImageGrab.grab(bbox=(x_iniziale, y_iniziale, x_finale, y_finale))  # x, y, w, h.
         img_np = np.array(img)
         rgb_img = cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB)
-
         cv2.imwrite("movimenti/" + folder + '/' + file_name + ".png", rgb_img)
+        print(file_name)
         x += 1
     path = os.path.abspath("movimenti/")
     os.startfile(path)
@@ -200,21 +200,23 @@ def intensita(array, coord):
 
 
 def generazione_heatmap():
-    heatmap = np.zeros((y_finale - y_iniziale, x_finale - x_iniziale))
+    first_image = glob.glob("elab_movimenti/**/*.png", recursive=True)[0]
+    first_image = cv2.imread(first_image)
+    height = first_image.shape[0]
+    width = first_image.shape[1]
+    heatmap = np.zeros((height, width))
     lettura_immagini(heatmap)
     heatmapshow = None
     heatmapshow = heatmap * 20
     heatmapshow = cv2.normalize(heatmap, heatmapshow, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
     heatmapshow = cv2.applyColorMap(heatmapshow, cv2.COLORMAP_INFERNO)
 
-    x_campo = x_finale - x_iniziale
-    y_campo = y_finale - y_iniziale
     Campo = cv2.imread("src//Campo.png")
-    Campo = cv2.resize(Campo, (x_campo, y_campo))
+    Campo = cv2.resize(Campo, (width, height))
     heatmapshow = cv2.addWeighted(Campo, 1, heatmapshow, 2, 0)
     now = datetime.now()  # current date and time
     file_name = str(now.strftime("%m-%d-%Y %H-%M-%S"))
-
+    print("GENERATED HEATMAP")
     return heatmapshow
 
 
