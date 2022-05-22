@@ -10,7 +10,7 @@ import shutil
 import mouse
 import ctypes
 import GUI
-from multiprocessing import Process
+import multiprocessing
 user32 = ctypes.windll.user32
 
 intensita_pixel = 3
@@ -167,17 +167,41 @@ def readconfig():
         print("NO CONFIG FILE, CREATING A DEFAULT ONE")
         save_config()
 
+def process(image, i, heatmaps, movimento):
+    print(movimento)
+    mask = cv2.inRange(image, lower, upper)
+    coord = cv2.findNonZero(mask)
+    heatmaps[i] = intensita(heatmaps[i], coord)
 
 def lettura_immagini(heatmap, height, width):
 
+    manager = multiprocessing.Manager()
+    heatmaps = manager.list()
+    procs = []
+    i = 0
 
     for movimento in glob.glob( "elab_movimenti/**/*.png", recursive=True):
-        print(movimento)
+
         image = cv2.imread(movimento)
+        height = image.shape[0]
+        width = image.shape[1]
         image = cv2.resize(image, (width, height))
-        mask = cv2.inRange(image, lower, upper)
-        coord = cv2.findNonZero(mask)
-        intensita(heatmap, coord)
+        heatmaps.append(np.zeros((height, width)))
+        proc = multiprocessing.Process(target=process, args=(image, i, heatmaps, movimento))
+        procs.append(proc)
+        i += 1
+
+    for proc in procs:
+        proc.start()
+    for proc in procs:
+        proc.join()
+
+
+
+
+    for h in range(len(heatmaps)):
+        heatmap = np.add(heatmap, heatmaps[h])
+    return heatmap
 
 
 
@@ -197,6 +221,7 @@ def intensita(array, coord):
                 array[x, y - s] += intensita_p_vicini
         except:
             pass
+    return array
 
 
 def generazione_heatmap():
@@ -205,8 +230,7 @@ def generazione_heatmap():
     height = first_image.shape[0]
     width = first_image.shape[1]
     heatmap = np.zeros((height, width))
-    lettura_immagini(heatmap, height, width)
-    heatmapshow = None
+    heatmap = lettura_immagini(heatmap, height, width)
     heatmapshow = heatmap * 20
     heatmapshow = cv2.normalize(heatmap, heatmapshow, alpha=0, beta=255, norm_type=cv2.NORM_MINMAX, dtype=cv2.CV_8U)
     heatmapshow = cv2.applyColorMap(heatmapshow, cv2.COLORMAP_INFERNO)
@@ -216,7 +240,7 @@ def generazione_heatmap():
     heatmapshow = cv2.addWeighted(Campo, 1, heatmapshow, 2, 0)
     now = datetime.now()  # current date and time
     file_name = str(now.strftime("%m-%d-%Y %H-%M-%S"))
-    print("GENERATED HEATMAP")
+    print("HEATMAP GENERATED")
     return heatmapshow
 
 
