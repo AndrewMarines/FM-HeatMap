@@ -94,7 +94,9 @@ def find_coords(master):
             cv2.destroyWindow("image")
             master.state('normal')
 
+
     img = ImageGrab.grab(bbox=(0, 0, user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)))  # x, y, w, h.
+    print(user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
     img_np = np.array(img)
     rgb_img = cv2.cvtColor(img_np, cv2.COLOR_BGR2RGB)
     cv2.imshow('image', rgb_img)

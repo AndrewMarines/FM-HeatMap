@@ -1,3 +1,5 @@
+import ctypes
+
 import cv2
 import numpy as np
 import GUI
@@ -13,6 +15,7 @@ def programma():
 
 
 if __name__ == '__main__':
+    ctypes.windll.shcore.SetProcessDpiAwareness(2)
     programma()
     cv2.destroyAllWindows()
 
