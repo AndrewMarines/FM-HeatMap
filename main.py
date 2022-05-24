@@ -1,8 +1,9 @@
+import ctypes
+
 import cv2
 import numpy as np
 import GUI
 import os
-import multiprocessing
 np.set_printoptions(threshold=np.inf)
 
 def programma():
@@ -14,7 +15,7 @@ def programma():
 
 
 if __name__ == '__main__':
-    multiprocessing.freeze_support()  # support multiprocessing in pyinstaller
+    ctypes.windll.shcore.SetProcessDpiAwareness(2)
     programma()
     cv2.destroyAllWindows()
 
