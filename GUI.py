@@ -11,6 +11,25 @@ import easygui
 import subprocess
 import numpy as np
 
+NO_SCREEN_AVAILABLE = """HEY BRO, SEEMS LIKE YOU HAVEN'T GOT SCREENSHOTS YET.
+    WHERE DO YOU WANNA GET BACK?"""
+
+REMOVE_FROM_DISK = "REMOVE FROM DISK"
+
+REMOVE_FROM_QUEUE = "REMOVE FROM QUEUE"
+
+SAVE_HEATMAP = "SAVE HEATMAP"
+
+GENERAL_DIRECTORY = "OPEN GENERAL DIRECTORY"
+
+QUEUE_DIRECTORY = "OPEN QUEUE DIRECTORY"
+
+RELOAD_SCREEN = "RELOAD SCREEN"
+
+PIXEL_COLOURATION = "AROUND-PIXELS INTENSITY"
+
+INTENSITY = "PIXEL INTENSITY"
+
 ATTACKING_DIRECTION = "ATTACKING DIRECTION"
 SCREENSHOT = 'Screenshot'
 HOME = "HOMEPAGE"
@@ -145,19 +164,19 @@ class Elaborazione(tk.Frame):
         tk.Button(self.settings, text=HOME, command=lambda: master.switch_frame(Home), background="#ffffff").grid(
             row=0, column=0, pady=5)
 
-        tk.Label(self.settings, text="PIXEL INTENSITY", background="#ffffff").grid(row=1, column=0, sticky=tk.NSEW)
+        tk.Label(self.settings, text=INTENSITY, background="#ffffff").grid(row=1, column=0, sticky=tk.NSEW)
         PI = tk.Spinbox(self.settings, from_=1, to=5, textvariable=var_pix_int, background="#ffffff")
         PI.grid(row=2, column=0, padx=5, sticky=tk.NSEW)
         var_pix_int_vic = tk.IntVar(self)
         var_pix_int_vic.set(Utils.intensita_p_vicini)
-        tk.Label(self.settings, text="RANGE OF PIXEL COLOURATION", background="#ffffff").grid(row=3, column=0,
-                                                                                              sticky=tk.NSEW)
+        tk.Label(self.settings, text=PIXEL_COLOURATION, background="#ffffff").grid(row=3, column=0,
+                                                                                   sticky=tk.NSEW)
         PI_V = tk.Spinbox(self.settings, from_=0, to=5, textvariable=var_pix_int_vic, background="#ffffff")
         PI_V.grid(row=4, column=0, padx=5, sticky=tk.NSEW)
-        tk.Button(self.settings, text="RELOAD SCREEN", command=self.reload, background="#ffffff").grid(row=5, column=0,
-                                                                                                       sticky=tk.NSEW, pady=5)
-        tk.Button(self.settings, text = "OPEN QUEUE DIRECTORY", background="#ffffff", command = lambda : subprocess.Popen('explorer "elab_movimenti"')).grid(row=6, column=0, sticky=tk.NSEW, pady=5)
-        tk.Button(self.settings, text = "OPEN GENERAL DIRECTORY", background="#ffffff", command = lambda : subprocess.Popen('explorer "movimenti"')).grid(row=7, column=0, sticky=tk.NSEW, pady=5)
+        tk.Button(self.settings, text=RELOAD_SCREEN, command=self.reload, background="#ffffff").grid(row=5, column=0,
+                                                                                                     sticky=tk.NSEW, pady=5)
+        tk.Button(self.settings, text =QUEUE_DIRECTORY, background="#ffffff", command = lambda : subprocess.Popen('explorer "elab_movimenti"')).grid(row=6, column=0, sticky=tk.NSEW, pady=5)
+        tk.Button(self.settings, text =GENERAL_DIRECTORY, background="#ffffff", command = lambda : subprocess.Popen('explorer "movimenti"')).grid(row=7, column=0, sticky=tk.NSEW, pady=5)
 
         #ATTACKING DIRECTION
         DIRECTION = [
@@ -172,7 +191,7 @@ class Elaborazione(tk.Frame):
 
     def heatmap_finale(self, direction):
         def salva_heatmap(img):
-            f_out = easygui.filesavebox("Select an output file", title="SAVE HEATMAP", default=DEFAULT_HEATMAP_NAME,
+            f_out = easygui.filesavebox("Select an output file", title=SAVE_HEATMAP, default=DEFAULT_HEATMAP_NAME,
                                         filetypes=".png")
             if ".png" in f_out:
                 cv2.imwrite(f_out, img)
@@ -206,7 +225,7 @@ class Elaborazione(tk.Frame):
         img_Screenshot = ImageTk.PhotoImage(image=img)
         # Create a Label to display the image
         tk.Label(top, image=img_Screenshot).grid(row=0, column=0)
-        tk.Button(top, text="SAVE HEATMAP", command=lambda: salva_heatmap(original_img)).grid(row=1, column=0)
+        tk.Button(top, text=SAVE_HEATMAP, command=lambda: salva_heatmap(original_img)).grid(row=1, column=0)
         top.mainloop()
 
     def populate(self):
@@ -243,8 +262,8 @@ class Elaborazione(tk.Frame):
             d_string = directories[d].upper()
             d_string = d_string.replace("ELAB_MOVIMENTI\\", "").replace("\\","")
             tk.Label(self.frame, text = d_string, background="#ffffff").grid(row = index_dir + 1 , column = 0)
-            btn_remove_dir.append(tk.Button(self.frame, text = "REMOVE FROM QUEUE", command= lambda c = d: [shutil.rmtree(directories[c]),
-                                                                                                            self.refresh()]))
+            btn_remove_dir.append(tk.Button(self.frame, text =REMOVE_FROM_QUEUE, command= lambda c = d: [shutil.rmtree(directories[c]),
+                                                                                                         self.refresh()]))
             btn_remove_dir[d]. grid(row = index_dir + 1 , column = 1, columnspan= 2, sticky = tk.NSEW)
 
 
@@ -255,11 +274,11 @@ class Elaborazione(tk.Frame):
                 ants[index] = ants[index].subsample(3, 3)
                 btn_img.append(tk.Button(self.frame, text=all_images[index], image=ants[index],
                                          compound=tk.TOP, command=lambda c=index: self.getImage(c)))
-                btn_remove.append(tk.Button(self.frame, text="REMOVE FROM QUEUE", command=lambda c=index: [
+                btn_remove.append(tk.Button(self.frame, text=REMOVE_FROM_QUEUE, command=lambda c=index: [
                     os.remove(all_images[c]),
                     self.refresh()
                 ]))
-                btn_rem_disk.append(tk.Button(self.frame, text="REMOVE FROM DISK", command=lambda c=index: [
+                btn_rem_disk.append(tk.Button(self.frame, text=REMOVE_FROM_DISK, command=lambda c=index: [
                     os.remove(all_images[c]),
                     os.remove(all_images[c].replace("elab_", "")),
                     self.refresh()
@@ -327,8 +346,7 @@ class Elaborazione(tk.Frame):
     def no_screenshot(self):
         top = tk.Toplevel()
         top.title("NO SCREENSHOT AVAILABLE")
-        tk.Label(top, text="""HEY BRO, SEEMS LIKE YOU HAVEN'T GOT SCREENSHOTS YET.
-    WHERE DO YOU WANNA GET BACK?""").grid(row=0, columnspan=2)
+        tk.Label(top, text=NO_SCREEN_AVAILABLE).grid(row=0, columnspan=2)
         tk.Button(top, text=HOME, command=lambda: [self.master.switch_frame(Home), top.destroy()]).grid(row=1,
                                                                                                               column=0)
         tk.Button(top, text=SCREENSHOT, command=lambda: [self.master.switch_frame(Screenshot), top.destroy()]).grid(
