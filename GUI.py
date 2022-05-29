@@ -10,57 +10,31 @@ import time
 import easygui
 import subprocess
 import configparser
-import numpy as np
-
-NO_SCREEN_AVAILABLE = """HEY BRO, SEEMS LIKE YOU HAVEN'T GOT SCREENSHOTS YET.
-    WHERE DO YOU WANNA GET BACK?"""
-
-REMOVE_FROM_DISK = "REMOVE FROM DISK"
-
-REMOVE_FROM_QUEUE = "REMOVE FROM QUEUE"
-
-SAVE_HEATMAP = "SAVE HEATMAP"
-
-GENERAL_DIRECTORY = "OPEN GENERAL DIRECTORY"
-
-QUEUE_DIRECTORY = "OPEN QUEUE DIRECTORY"
-
-RELOAD_SCREEN = "RELOAD SCREEN"
-
-PIXEL_COLOURATION = "AROUND-PIXELS INTENSITY"
-
-INTENSITY = "PIXEL INTENSITY"
-
-ATTACKING_DIRECTION = "ATTACKING DIRECTION"
-SCREENSHOT = 'Screenshot'
-HOME = "HOMEPAGE"
-HEATMAP = "HEATMAP"
-DEFAULT_HEATMAP_NAME = "HEATMAP"
-MATCH_NAME = "MATCH"
-SECONDS_PER_SCREENSHOT = "INGAME SECONDS PER SCREENSHOT"
-NUMBER_OF_SCREENSHOT = "Number Of Screenshots"
-START = "START"
 
 CONF_FILE = "labels.txt"
 configlabels = configparser.ConfigParser()
 def save_labels():
+
     configlabels['DEFAULT'] = {
-        'NO_SCREEN_AVAILABLE': NO_SCREEN_AVAILABLE,
-        'REMOVE_FROM_DISK': REMOVE_FROM_DISK,
-        'REMOVE_FROM_QUEUE': REMOVE_FROM_QUEUE,
-        'SAVE_HEATMAP': SAVE_HEATMAP,
-        'GENERAL_DIRECTORY': GENERAL_DIRECTORY,
-        'QUEUE_DIRECTORY': QUEUE_DIRECTORY,
-        'RELOAD_SCREEN': RELOAD_SCREEN,
-        'PIXEL_COLOURATION': PIXEL_COLOURATION,
-        'INTENSITY': INTENSITY,
-        'ATTACKING_DIRECTION': ATTACKING_DIRECTION,
-        'SCREENSHOT': SCREENSHOT,
-        'HOME': HOME,
-        'HEATMAP': HEATMAP,
-        'DEFAULT_HEATMAP_NAME': DEFAULT_HEATMAP_NAME,
-        'NUMBER_OF_SCREENSHOT': NUMBER_OF_SCREENSHOT,
-        'START': START
+        'NO_SCREEN_AVAILABLE': """HEY BRO, SEEMS LIKE YOU HAVEN'T GOT SCREENSHOTS YET.
+    WHERE DO YOU WANNA GET BACK?""",
+        'REMOVE_FROM_DISK': "REMOVE FROM DISK",
+        'REMOVE_FROM_QUEUE': "REMOVE FROM QUEUE",
+        'SAVE_HEATMAP': "SAVE HEATMAP",
+        'GENERAL_DIRECTORY': "OPEN GENERAL DIRECTORY",
+        'QUEUE_DIRECTORY': "OPEN QUEUE DIRECTORY",
+        'RELOAD_SCREEN': "RELOAD SCREEN",
+        'PIXEL_COLOURATION': "AROUND-PIXELS INTENSITY",
+        'INTENSITY': "PIXEL INTENSITY",
+        'ATTACKING_DIRECTION': "ATTACKING DIRECTION",
+        'SCREENSHOT': 'Screenshot',
+        'HOMEPAGE': "HOMEPAGE",
+        'HEATMAP': "HEATMAP",
+        'DEFAULT_HEATMAP_NAME': "HEATMAP",
+        'NUMBER_OF_SCREENSHOT': "MATCH",
+        'SECONDS_PER_SCREENSHOT': "INGAME SECONDS PER SCREENSHOT",
+        'START': "START",
+        'MATCH_NAME' : "FOLDER NAME"
 
     }
     with open(CONF_FILE, 'w') as configfile:
@@ -68,25 +42,27 @@ def save_labels():
 
 def readlabels():
     global NO_SCREEN_AVAILABLE, REMOVE_FROM_DISK, REMOVE_FROM_QUEUE, SAVE_HEATMAP, GENERAL_DIRECTORY, QUEUE_DIRECTORY, RELOAD_SCREEN
-    global PIXEL_COLOURATION, INTENSITY, ATTACKING_DIRECTION, SCREENSHOT, HOME, HEATMAP, DEFAULT_HEATMAP_NAME, NUMBER_OF_SCREENSHOT, START
+    global PIXEL_COLOURATION, INTENSITY, ATTACKING_DIRECTION, SCREENSHOT, HOMEPAGE, HEATMAP, DEFAULT_HEATMAP_NAME, NUMBER_OF_SCREENSHOT,SECONDS_PER_SCREENSHOT, START,MATCH_NAME
     if glob.glob(CONF_FILE):
         configlabels.read(CONF_FILE)
-        NO_SCREEN_AVAILABLE = int(configlabels['DEFAULT']['NO_SCREEN_AVAILABLE'])
-        REMOVE_FROM_DISK = int(configlabels['DEFAULT']['REMOVE_FROM_DISK'])
-        REMOVE_FROM_QUEUE = int(configlabels['DEFAULT']['REMOVE_FROM_QUEUE'])
-        SAVE_HEATMAP = int(configlabels['DEFAULT']['SAVE_HEATMAP'])
-        GENERAL_DIRECTORY = int(configlabels['DEFAULT']['GENERAL_DIRECTORY'])
-        QUEUE_DIRECTORY = int(configlabels['DEFAULT']['QUEUE_DIRECTORY'])
-        RELOAD_SCREEN = int(configlabels['DEFAULT']['RELOAD_SCREEN'])
-        PIXEL_COLOURATION = int(configlabels['DEFAULT']['PIXEL_COLOURATION'])
-        INTENSITY = int(configlabels['DEFAULT']['INTENSITY'])
-        ATTACKING_DIRECTION = int(configlabels['DEFAULT']['ATTACKING_DIRECTION'])
-        SCREENSHOT = int(configlabels['DEFAULT']['SCREENSHOT'])
-        HOME = int(configlabels['DEFAULT']['HOME'])
-        HEATMAP = int(configlabels['DEFAULT']['HEATMAP'])
-        DEFAULT_HEATMAP_NAME = int(configlabels['DEFAULT']['DEFAULT_HEATMAP_NAME'])
-        NUMBER_OF_SCREENSHOT = int(configlabels['DEFAULT']['NUMBER_OF_SCREENSHOT'])
-        START = int(configlabels['DEFAULT']['START'])
+        NO_SCREEN_AVAILABLE = configlabels['DEFAULT']['NO_SCREEN_AVAILABLE']
+        REMOVE_FROM_DISK = configlabels['DEFAULT']['REMOVE_FROM_DISK']
+        REMOVE_FROM_QUEUE = configlabels['DEFAULT']['REMOVE_FROM_QUEUE']
+        SAVE_HEATMAP = configlabels['DEFAULT']['SAVE_HEATMAP']
+        GENERAL_DIRECTORY = configlabels['DEFAULT']['GENERAL_DIRECTORY']
+        QUEUE_DIRECTORY = configlabels['DEFAULT']['QUEUE_DIRECTORY']
+        RELOAD_SCREEN = configlabels['DEFAULT']['RELOAD_SCREEN']
+        PIXEL_COLOURATION = configlabels['DEFAULT']['PIXEL_COLOURATION']
+        INTENSITY = configlabels['DEFAULT']['INTENSITY']
+        ATTACKING_DIRECTION = configlabels['DEFAULT']['ATTACKING_DIRECTION']
+        SCREENSHOT = configlabels['DEFAULT']['SCREENSHOT']
+        HOMEPAGE = configlabels['DEFAULT']['HOMEPAGE']
+        HEATMAP = configlabels['DEFAULT']['HEATMAP']
+        DEFAULT_HEATMAP_NAME = configlabels['DEFAULT']['DEFAULT_HEATMAP_NAME']
+        NUMBER_OF_SCREENSHOT = configlabels['DEFAULT']['NUMBER_OF_SCREENSHOT']
+        SECONDS_PER_SCREENSHOT = configlabels['DEFAULT']['SECONDS_PER_SCREENSHOT']
+        START = configlabels['DEFAULT']['START']
+        MATCH_NAME = configlabels['DEFAULT']['MATCH_NAME']
     else:
         print("NO CONFIG FILE, CREATING A DEFAULT ONE")
         save_labels()
@@ -110,7 +86,7 @@ class GUI_APP(tk.Tk):
 class Home(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
-        master.title(HOME)
+        master.title(HOMEPAGE)
 
         # SCREENSHOT SECTION
         screenshot_icon = tk.PhotoImage(file="src/screenshot.png")
@@ -137,7 +113,7 @@ class Screenshot(tk.Frame):
         self.columnconfigure(1, weight=1)
         self.rowconfigure(1, weight=1)
 
-        tk.Button(self, text=HOME, command=lambda: master.switch_frame(Home), background="#ffffff").grid(
+        tk.Button(self, text=HOMEPAGE, command=lambda: master.switch_frame(Home), background="#ffffff").grid(
             row=0, column=0, sticky=tk.NW)
 
         # SPINBOXES
@@ -212,7 +188,7 @@ class Elaborazione(tk.Frame):
 
         var_pix_int = tk.IntVar(self)
         var_pix_int.set(Utils.intensita_pixel)
-        tk.Button(self.settings, text=HOME, command=lambda: master.switch_frame(Home), background="#ffffff").grid(
+        tk.Button(self.settings, text=HOMEPAGE, command=lambda: master.switch_frame(Home), background="#ffffff").grid(
             row=0, column=0, pady=5)
 
         tk.Label(self.settings, text=INTENSITY, background="#ffffff").grid(row=1, column=0, sticky=tk.NSEW)
@@ -398,7 +374,7 @@ class Elaborazione(tk.Frame):
         top = tk.Toplevel()
         top.title("NO SCREENSHOT AVAILABLE")
         tk.Label(top, text=NO_SCREEN_AVAILABLE).grid(row=0, columnspan=2)
-        tk.Button(top, text=HOME, command=lambda: [self.master.switch_frame(Home), top.destroy()]).grid(row=1,
+        tk.Button(top, text=HOMEPAGE, command=lambda: [self.master.switch_frame(Home), top.destroy()]).grid(row=1,
                                                                                                               column=0)
         tk.Button(top, text=SCREENSHOT, command=lambda: [self.master.switch_frame(Screenshot), top.destroy()]).grid(
             row=1, column=1)

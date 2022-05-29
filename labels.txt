@@ -11,9 +11,11 @@ pixel_colouration = AROUND-PIXELS INTENSITY
 intensity = PIXEL INTENSITY
 attacking_direction = ATTACKING DIRECTION
 screenshot = Screenshot
-home = HOMEPAGE
+homepage = HOMEPAGE
 heatmap = HEATMAP
 default_heatmap_name = HEATMAP
-number_of_screenshot = Number Of Screenshots
+number_of_screenshot = MATCH
+seconds_per_screenshot = INGAME SECONDS PER SCREENSHOT
 start = START
+match_name = FOLDER NAME
 
