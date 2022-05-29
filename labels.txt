@@ -1,0 +1,19 @@
+[DEFAULT]
+no_screen_available = HEY BRO, SEEMS LIKE YOU HAVEN'T GOT SCREENSHOTS YET.
+	    WHERE DO YOU WANNA GET BACK?
+remove_from_disk = REMOVE FROM DISK
+remove_from_queue = REMOVE FROM QUEUE
+save_heatmap = SAVE HEATMAP
+general_directory = OPEN GENERAL DIRECTORY
+queue_directory = OPEN QUEUE DIRECTORY
+reload_screen = RELOAD SCREEN
+pixel_colouration = AROUND-PIXELS INTENSITY
+intensity = PIXEL INTENSITY
+attacking_direction = ATTACKING DIRECTION
+screenshot = Screenshot
+home = HOMEPAGE
+heatmap = HEATMAP
+default_heatmap_name = HEATMAP
+number_of_screenshot = Number Of Screenshots
+start = START
+

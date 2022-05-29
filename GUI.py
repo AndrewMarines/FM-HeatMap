@@ -9,6 +9,7 @@ import cv2
 import time
 import easygui
 import subprocess
+import configparser
 import numpy as np
 
 NO_SCREEN_AVAILABLE = """HEY BRO, SEEMS LIKE YOU HAVEN'T GOT SCREENSHOTS YET.
@@ -39,6 +40,56 @@ MATCH_NAME = "MATCH"
 SECONDS_PER_SCREENSHOT = "INGAME SECONDS PER SCREENSHOT"
 NUMBER_OF_SCREENSHOT = "Number Of Screenshots"
 START = "START"
+
+CONF_FILE = "labels.txt"
+configlabels = configparser.ConfigParser()
+def save_labels():
+    configlabels['DEFAULT'] = {
+        'NO_SCREEN_AVAILABLE': NO_SCREEN_AVAILABLE,
+        'REMOVE_FROM_DISK': REMOVE_FROM_DISK,
+        'REMOVE_FROM_QUEUE': REMOVE_FROM_QUEUE,
+        'SAVE_HEATMAP': SAVE_HEATMAP,
+        'GENERAL_DIRECTORY': GENERAL_DIRECTORY,
+        'QUEUE_DIRECTORY': QUEUE_DIRECTORY,
+        'RELOAD_SCREEN': RELOAD_SCREEN,
+        'PIXEL_COLOURATION': PIXEL_COLOURATION,
+        'INTENSITY': INTENSITY,
+        'ATTACKING_DIRECTION': ATTACKING_DIRECTION,
+        'SCREENSHOT': SCREENSHOT,
+        'HOME': HOME,
+        'HEATMAP': HEATMAP,
+        'DEFAULT_HEATMAP_NAME': DEFAULT_HEATMAP_NAME,
+        'NUMBER_OF_SCREENSHOT': NUMBER_OF_SCREENSHOT,
+        'START': START
+
+    }
+    with open(CONF_FILE, 'w') as configfile:
+        configlabels.write(configfile)
+
+def readlabels():
+    global NO_SCREEN_AVAILABLE, REMOVE_FROM_DISK, REMOVE_FROM_QUEUE, SAVE_HEATMAP, GENERAL_DIRECTORY, QUEUE_DIRECTORY, RELOAD_SCREEN
+    global PIXEL_COLOURATION, INTENSITY, ATTACKING_DIRECTION, SCREENSHOT, HOME, HEATMAP, DEFAULT_HEATMAP_NAME, NUMBER_OF_SCREENSHOT, START
+    if glob.glob(CONF_FILE):
+        configlabels.read(CONF_FILE)
+        NO_SCREEN_AVAILABLE = int(configlabels['DEFAULT']['NO_SCREEN_AVAILABLE'])
+        REMOVE_FROM_DISK = int(configlabels['DEFAULT']['REMOVE_FROM_DISK'])
+        REMOVE_FROM_QUEUE = int(configlabels['DEFAULT']['REMOVE_FROM_QUEUE'])
+        SAVE_HEATMAP = int(configlabels['DEFAULT']['SAVE_HEATMAP'])
+        GENERAL_DIRECTORY = int(configlabels['DEFAULT']['GENERAL_DIRECTORY'])
+        QUEUE_DIRECTORY = int(configlabels['DEFAULT']['QUEUE_DIRECTORY'])
+        RELOAD_SCREEN = int(configlabels['DEFAULT']['RELOAD_SCREEN'])
+        PIXEL_COLOURATION = int(configlabels['DEFAULT']['PIXEL_COLOURATION'])
+        INTENSITY = int(configlabels['DEFAULT']['INTENSITY'])
+        ATTACKING_DIRECTION = int(configlabels['DEFAULT']['ATTACKING_DIRECTION'])
+        SCREENSHOT = int(configlabels['DEFAULT']['SCREENSHOT'])
+        HOME = int(configlabels['DEFAULT']['HOME'])
+        HEATMAP = int(configlabels['DEFAULT']['HEATMAP'])
+        DEFAULT_HEATMAP_NAME = int(configlabels['DEFAULT']['DEFAULT_HEATMAP_NAME'])
+        NUMBER_OF_SCREENSHOT = int(configlabels['DEFAULT']['NUMBER_OF_SCREENSHOT'])
+        START = int(configlabels['DEFAULT']['START'])
+    else:
+        print("NO CONFIG FILE, CREATING A DEFAULT ONE")
+        save_labels()
 
 class GUI_APP(tk.Tk):
     def __init__(self):
@@ -354,6 +405,7 @@ class Elaborazione(tk.Frame):
 
 
 def main():
+    readlabels()
     Utils.readconfig()
     app = GUI_APP()
     app.configure(background='white')
