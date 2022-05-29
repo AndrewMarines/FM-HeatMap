@@ -169,8 +169,7 @@ def readconfig():
         print("NO CONFIG FILE, CREATING A DEFAULT ONE")
         save_config()
 
-def process(image, i, heatmaps, movimento):
-    print(movimento)
+def process(image, i, heatmaps, movimento,intensita_p_vicini):
     mask = cv2.inRange(image, lower, upper)
     coord = cv2.findNonZero(mask)
     heatmaps[i] = intensita(heatmaps[i], coord)
@@ -189,7 +188,7 @@ def lettura_immagini(heatmap, height, width):
         width = image.shape[1]
         image = cv2.resize(image, (width, height))
         heatmaps.append(np.zeros((height, width)))
-        proc = multiprocessing.Process(target=process, args=(image, i, heatmaps, movimento))
+        proc = multiprocessing.Process(target=process, args=(image, i, heatmaps, movimento, intensita_p_vicini))
         procs.append(proc)
         i += 1
 
@@ -209,6 +208,7 @@ def lettura_immagini(heatmap, height, width):
 
 
 def intensita(array, coord):
+    readconfig()
     for c in coord:
 
         y = c[0][0]
