@@ -10,7 +10,10 @@ import shutil
 import mouse
 import ctypes
 import GUI
+import keyboard
+
 import multiprocessing
+
 user32 = ctypes.windll.user32
 
 intensita_pixel = 3
@@ -37,12 +40,18 @@ def get_time():
 
 
 def screenshot(master, folder):
+    def break_fun():
+        global number_of_screenshot
+        number_of_screenshot = 0
+
     read_bar(master)
     readconfig()
     x = 0
     if not os.path.exists('movimenti/' + folder):
         os.mkdir('movimenti/' + folder)
     while (x < number_of_screenshot):
+        keyboard.add_hotkey("F10", lambda: break_fun())
+        print(number_of_screenshot)
         file_name = get_time()
         for s in range(ingame_seconds_per_screenshot):
             mouse.move(x_bar, y_bar)
@@ -93,7 +102,6 @@ def find_coords(master):
             save_config()
             cv2.destroyWindow("image")
             master.state('normal')
-
 
     img = ImageGrab.grab(bbox=(0, 0, user32.GetSystemMetrics(0), user32.GetSystemMetrics(1)))  # x, y, w, h.
     print(user32.GetSystemMetrics(0), user32.GetSystemMetrics(1))
@@ -169,20 +177,20 @@ def readconfig():
         print("NO CONFIG FILE, CREATING A DEFAULT ONE")
         save_config()
 
-def process(image, i, heatmaps, movimento,intensita_p_vicini):
+
+def process(image, i, heatmaps, movimento, intensita_p_vicini):
     mask = cv2.inRange(image, lower, upper)
     coord = cv2.findNonZero(mask)
     heatmaps[i] = intensita(heatmaps[i], coord)
 
-def lettura_immagini(heatmap, height, width):
 
+def lettura_immagini(heatmap, height, width):
     manager = multiprocessing.Manager()
     heatmaps = manager.list()
     procs = []
     i = 0
 
-    for movimento in glob.glob( "elab_movimenti/**/*.png", recursive=True):
-
+    for movimento in glob.glob("elab_movimenti/**/*.png", recursive=True):
         image = cv2.imread(movimento)
         height = image.shape[0]
         width = image.shape[1]
@@ -197,14 +205,9 @@ def lettura_immagini(heatmap, height, width):
     for proc in procs:
         proc.join()
 
-
-
-
     for h in range(len(heatmaps)):
         heatmap = np.add(heatmap, heatmaps[h])
     return heatmap
-
-
 
 
 def intensita(array, coord):

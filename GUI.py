@@ -31,17 +31,18 @@ def save_labels():
         'HOMEPAGE': "HOMEPAGE",
         'HEATMAP': "HEATMAP",
         'DEFAULT_HEATMAP_NAME': "HEATMAP",
-        'NUMBER_OF_SCREENSHOT': "MATCH",
+        'NUMBER_OF_SCREENSHOT': "NUMBER OF SCREENSHOTS",
         'SECONDS_PER_SCREENSHOT': "INGAME SECONDS PER SCREENSHOT",
         'START': "START",
-        'MATCH_NAME' : "FOLDER NAME"
+        'MATCH_NAME' : "FOLDER NAME",
+        'STOP_SCREENSHOTTING' : "F10 TO STOP"
 
     }
     with open(CONF_FILE, 'w') as configfile:
         configlabels.write(configfile)
 
 def readlabels():
-    global NO_SCREEN_AVAILABLE, REMOVE_FROM_DISK, REMOVE_FROM_QUEUE, SAVE_HEATMAP, GENERAL_DIRECTORY, QUEUE_DIRECTORY, RELOAD_SCREEN
+    global NO_SCREEN_AVAILABLE, REMOVE_FROM_DISK, REMOVE_FROM_QUEUE, SAVE_HEATMAP, GENERAL_DIRECTORY, QUEUE_DIRECTORY, RELOAD_SCREEN, STOP_SCREENSHOTTING
     global PIXEL_COLOURATION, INTENSITY, ATTACKING_DIRECTION, SCREENSHOT, HOMEPAGE, HEATMAP, DEFAULT_HEATMAP_NAME, NUMBER_OF_SCREENSHOT,SECONDS_PER_SCREENSHOT, START,MATCH_NAME
     if glob.glob(CONF_FILE):
         configlabels.read(CONF_FILE)
@@ -63,6 +64,7 @@ def readlabels():
         SECONDS_PER_SCREENSHOT = configlabels['DEFAULT']['SECONDS_PER_SCREENSHOT']
         START = configlabels['DEFAULT']['START']
         MATCH_NAME = configlabels['DEFAULT']['MATCH_NAME']
+        STOP_SCREENSHOTTING = configlabels['DEFAULT']['STOP_SCREENSHOTTING']
     else:
         print("NO CONFIG FILE, CREATING A DEFAULT ONE")
         save_labels()
@@ -86,7 +88,7 @@ class GUI_APP(tk.Tk):
 class Home(tk.Frame):
     def __init__(self, master):
         tk.Frame.__init__(self, master)
-        master.title(HOMEPAGE)
+        master.title("HOMEPAGE")
 
         # SCREENSHOT SECTION
         screenshot_icon = tk.PhotoImage(file="src/screenshot.png")
@@ -146,8 +148,8 @@ class Screenshot(tk.Frame):
         ])
         Screen.image = img_Screenshot
         Screen.grid(row=0, column=2, padx=20, pady=20, rowspan=5)
-
-        avvio = tk.Button(self, text=START,
+        textavvio= START + "(" + STOP_SCREENSHOTTING + ")"
+        avvio = tk.Button(self, text=textavvio,
                           command=lambda: [
                               Utils.set_Time_Screen(var_ts.get()),
                               Utils.set_Number_Screenshot(var_ns.get()),

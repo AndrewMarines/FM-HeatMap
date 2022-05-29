@@ -14,8 +14,9 @@ screenshot = Screenshot
 homepage = HOMEPAGE
 heatmap = HEATMAP
 default_heatmap_name = HEATMAP
-number_of_screenshot = MATCH
+number_of_screenshot = NUMBER OF SCREENSHOTS
 seconds_per_screenshot = INGAME SECONDS PER SCREENSHOT
 start = START
 match_name = FOLDER NAME
+stop_screenshotting = F10 TO STOP
 
