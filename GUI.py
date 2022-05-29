@@ -35,7 +35,7 @@ def save_labels():
         'SECONDS_PER_SCREENSHOT': "INGAME SECONDS PER SCREENSHOT",
         'START': "START",
         'MATCH_NAME' : "FOLDER NAME",
-        'STOP_SCREENSHOTTING' : "F10 TO STOP"
+        'STOP_SCREENSHOTTING' : " TO STOP"
 
     }
     with open(CONF_FILE, 'w') as configfile:
@@ -148,7 +148,7 @@ class Screenshot(tk.Frame):
         ])
         Screen.image = img_Screenshot
         Screen.grid(row=0, column=2, padx=20, pady=20, rowspan=5)
-        textavvio= START + "(" + STOP_SCREENSHOTTING + ")"
+        textavvio= START + "(" + Utils.get_Stop_Key() + " "+ STOP_SCREENSHOTTING + ")"
         avvio = tk.Button(self, text=textavvio,
                           command=lambda: [
                               Utils.set_Time_Screen(var_ts.get()),

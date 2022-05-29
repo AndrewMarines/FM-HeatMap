@@ -26,6 +26,7 @@ x_finale = 400
 y_finale = 400
 x_bar = 0
 y_bar = 0
+STOP_KEY = "F10"
 
 lower = np.array([0, 0, 120])
 upper = np.array([40, 170, 255])
@@ -50,7 +51,7 @@ def screenshot(master, folder):
     if not os.path.exists('movimenti/' + folder):
         os.mkdir('movimenti/' + folder)
     while (x < number_of_screenshot):
-        keyboard.add_hotkey("F10", lambda: break_fun())
+        keyboard.add_hotkey(STOP_KEY, lambda: break_fun())
         print(number_of_screenshot)
         file_name = get_time()
         for s in range(ingame_seconds_per_screenshot):
@@ -153,14 +154,15 @@ def save_config():
         'x_finale': x_finale,
         'y_finale': y_finale,
         'x_bar': x_bar,
-        'y_bar': y_bar
+        'y_bar': y_bar,
+        'stop_key' : STOP_KEY
     }
     with open('config.ini', 'w') as configfile:
         config.write(configfile)
 
 
 def readconfig():
-    global x_iniziale, x_finale, y_finale, y_iniziale, intensita_pixel, intensita_p_vicini, ingame_seconds_per_screenshot, number_of_screenshot, x_bar, y_bar
+    global x_iniziale, x_finale, y_finale, y_iniziale, intensita_pixel, intensita_p_vicini, ingame_seconds_per_screenshot, number_of_screenshot, x_bar, y_bar, STOP_KEY
     if glob.glob(CONF_FILE):
         config.read(CONF_FILE)
         intensita_pixel = int(config['DEFAULT']['intensita_pixel'])
@@ -173,6 +175,7 @@ def readconfig():
         y_finale = int(config['DEFAULT']['y_finale'])
         x_bar = int(config['DEFAULT']['x_bar'])
         y_bar = int(config['DEFAULT']['y_bar'])
+        STOP_KEY = config['DEFAULT']['STOP_KEY']
     else:
         print("NO CONFIG FILE, CREATING A DEFAULT ONE")
         save_config()
@@ -285,3 +288,6 @@ def rotate_image(img, path):
     rotated_image = np.rot90(img)
     rotated_image = np.rot90(rotated_image)
     cv2.imwrite(path, rotated_image)
+
+def get_Stop_Key():
+    return STOP_KEY
