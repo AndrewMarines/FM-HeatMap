@@ -73,6 +73,7 @@ class GUI_APP(tk.Tk):
         tk.Tk.__init__(self)
         self._frame = None
         self.switch_frame(Home)
+        self.iconbitmap('src//icon.ico')
 
     def switch_frame(self, frame_class):
         """Destroys current frame and replaces it with a new one."""
@@ -85,6 +86,8 @@ class GUI_APP(tk.Tk):
 
 
 class Home(tk.Frame):
+
+
     def __init__(self, master):
         tk.Frame.__init__(self, master)
         master.title("HOMEPAGE")
@@ -104,7 +107,9 @@ class Home(tk.Frame):
                        compound=tk.TOP, command=lambda: [Utils.organize_images(), master.switch_frame(Elaborazione)],
                        background="#ffffff")
         hm.image = heatmap_icon
-        hm.pack(side=tk.RIGHT)
+        hm.pack()
+
+
 
 
 class Screenshot(tk.Frame):
