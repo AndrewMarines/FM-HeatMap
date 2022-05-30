@@ -246,8 +246,7 @@ def generazione_heatmap():
     Campo = cv2.imread("src//Campo.png")
     Campo = cv2.resize(Campo, (width, height))
     heatmapshow = cv2.addWeighted(Campo, 1, heatmapshow, 2, 0)
-    now = datetime.now()  # current date and time
-    file_name = str(now.strftime("%m-%d-%Y %H-%M-%S"))
+
     print("HEATMAP GENERATED")
     return heatmapshow
 
