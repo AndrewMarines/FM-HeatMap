@@ -26,7 +26,7 @@ x_finale = 400
 y_finale = 400
 x_bar = 0
 y_bar = 0
-STOP_KEY = "F10"
+STOP_KEY = "ESC"
 
 lower = np.array([0, 0, 120])
 upper = np.array([40, 170, 255])

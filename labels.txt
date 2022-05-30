@@ -1,22 +1,21 @@
 [DEFAULT]
-no_screen_available = HEY BRO, SEEMS LIKE YOU HAVEN'T GOT SCREENSHOTS YET.
-	    WHERE DO YOU WANNA GET BACK?
-remove_from_disk = REMOVE FROM DISK
-remove_from_queue = REMOVE FROM QUEUE
-save_heatmap = SAVE HEATMAP
-general_directory = OPEN GENERAL DIRECTORY
-queue_directory = OPEN QUEUE DIRECTORY
-reload_screen = RELOAD SCREEN
-pixel_colouration = AROUND-PIXELS INTENSITY
-intensity = PIXEL INTENSITY
-attacking_direction = ATTACKING DIRECTION
+no_screen_available = No screenshots available. Choose where you wish to return.
+remove_from_disk = Delete file from drive
+remove_from_queue = Remove screenshot from queue
+save_heatmap = Save heatmap
+general_directory = Open program folder
+queue_directory = Open screenshots folder
+reload_screen = Reload screen
+pixel_colouration = Pixel colour
+intensity = Pixel intensity
+attacking_direction = Direction of attack
 screenshot = Screenshot
-homepage = HOMEPAGE
-heatmap = HEATMAP
-default_heatmap_name = HEATMAP
+homepage = Home
+heatmap = Heatmap
+default_heatmap_name = Heatmap
 number_of_screenshot = NUMBER OF SCREENSHOTS
-seconds_per_screenshot = INGAME SECONDS PER SCREENSHOT
-start = START
-match_name = FOLDER NAME
-stop_screenshotting =TO STOP
+seconds_per_screenshot = Frequency of screenshot
+start = Start
+match_name = Folder name
+stop_screenshotting =  TO STOP
 

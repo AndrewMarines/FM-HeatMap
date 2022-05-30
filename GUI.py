@@ -16,25 +16,24 @@ configlabels = configparser.ConfigParser()
 def save_labels():
 
     configlabels['DEFAULT'] = {
-        'NO_SCREEN_AVAILABLE': """HEY BRO, SEEMS LIKE YOU HAVEN'T GOT SCREENSHOTS YET.
-    WHERE DO YOU WANNA GET BACK?""",
-        'REMOVE_FROM_DISK': "REMOVE FROM DISK",
-        'REMOVE_FROM_QUEUE': "REMOVE FROM QUEUE",
-        'SAVE_HEATMAP': "SAVE HEATMAP",
-        'GENERAL_DIRECTORY': "OPEN GENERAL DIRECTORY",
-        'QUEUE_DIRECTORY': "OPEN QUEUE DIRECTORY",
-        'RELOAD_SCREEN': "RELOAD SCREEN",
-        'PIXEL_COLOURATION': "AROUND-PIXELS INTENSITY",
-        'INTENSITY': "PIXEL INTENSITY",
-        'ATTACKING_DIRECTION': "ATTACKING DIRECTION",
+        'NO_SCREEN_AVAILABLE': """No screenshots available. Choose where you wish to return.""",
+        'REMOVE_FROM_DISK': "Delete file from drive",
+        'REMOVE_FROM_QUEUE': "Remove screenshot from queue",
+        'SAVE_HEATMAP': "Save heatmap",
+        'GENERAL_DIRECTORY': "Open program folder",
+        'QUEUE_DIRECTORY': "Open screenshots folder",
+        'RELOAD_SCREEN': "Reload screen",
+        'PIXEL_COLOURATION': "Pixel colour",
+        'INTENSITY': "Pixel intensity",
+        'ATTACKING_DIRECTION': "Direction of attack",
         'SCREENSHOT': 'Screenshot',
-        'HOMEPAGE': "HOMEPAGE",
-        'HEATMAP': "HEATMAP",
-        'DEFAULT_HEATMAP_NAME': "HEATMAP",
+        'HOMEPAGE': "Home",
+        'HEATMAP': "Heatmap",
+        'DEFAULT_HEATMAP_NAME': "Heatmap",
         'NUMBER_OF_SCREENSHOT': "NUMBER OF SCREENSHOTS",
-        'SECONDS_PER_SCREENSHOT': "INGAME SECONDS PER SCREENSHOT",
-        'START': "START",
-        'MATCH_NAME' : "FOLDER NAME",
+        'SECONDS_PER_SCREENSHOT': "Frequency of screenshot",
+        'START': "Start",
+        'MATCH_NAME' : "Folder name",
         'STOP_SCREENSHOTTING' : " TO STOP"
 
     }
