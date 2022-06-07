@@ -25,16 +25,21 @@ def save_labels():
         'RELOAD_SCREEN': "Reload screen",
         'PIXEL_COLOURATION': "Pixel colour",
         'INTENSITY': "Pixel intensity",
-        'ATTACKING_DIRECTION': "Direction of attack",
+        'ATTACKING_DIRECTION': "Label direction of attack",
         'SCREENSHOT': 'Screenshot',
         'HOMEPAGE': "Home",
         'HEATMAP': "Heatmap",
         'DEFAULT_HEATMAP_NAME': "Heatmap",
-        'NUMBER_OF_SCREENSHOT': "NUMBER OF SCREENSHOTS",
+        'NUMBER_OF_SCREENSHOT': "Number of screenshots",
         'SECONDS_PER_SCREENSHOT': "Frequency of screenshot",
         'START': "Start",
         'MATCH_NAME' : "Folder name",
-        'STOP_SCREENSHOTTING' : " TO STOP"
+        'STOP_SCREENSHOTTING' : " to stop",
+        'CAPTURE_AREA': "Set area to capture",
+        'CAPTURE_INSTRUCTION': """How to set the area to capture:
+        1. Left click on top-left corner of the pitch;
+        2. Right click on bottom-right corner of the pitch.""",
+        'GENERATE_HEATMAP' : "Generate Heatmap"
 
     }
     with open(CONF_FILE, 'w') as configfile:
@@ -42,7 +47,8 @@ def save_labels():
 
 def readlabels():
     global NO_SCREEN_AVAILABLE, REMOVE_FROM_DISK, REMOVE_FROM_QUEUE, SAVE_HEATMAP, GENERAL_DIRECTORY, QUEUE_DIRECTORY, RELOAD_SCREEN, STOP_SCREENSHOTTING
-    global PIXEL_COLOURATION, INTENSITY, ATTACKING_DIRECTION, SCREENSHOT, HOMEPAGE, HEATMAP, DEFAULT_HEATMAP_NAME, NUMBER_OF_SCREENSHOT,SECONDS_PER_SCREENSHOT, START,MATCH_NAME
+    global PIXEL_COLOURATION,  INTENSITY, ATTACKING_DIRECTION, SCREENSHOT, HOMEPAGE, HEATMAP, DEFAULT_HEATMAP_NAME, NUMBER_OF_SCREENSHOT,SECONDS_PER_SCREENSHOT, START,MATCH_NAME
+    global CAPTURE_AREA, CAPTURE_INSTRUCTION, GENERATE_HEATMAP
     if glob.glob(CONF_FILE):
         configlabels.read(CONF_FILE)
         NO_SCREEN_AVAILABLE = configlabels['DEFAULT']['NO_SCREEN_AVAILABLE']
@@ -64,6 +70,9 @@ def readlabels():
         START = configlabels['DEFAULT']['START']
         MATCH_NAME = configlabels['DEFAULT']['MATCH_NAME']
         STOP_SCREENSHOTTING = configlabels['DEFAULT']['STOP_SCREENSHOTTING']
+        CAPTURE_AREA = configlabels['DEFAULT']['CAPTURE_AREA']
+        CAPTURE_INSTRUCTION = configlabels['DEFAULT']['CAPTURE_INSTRUCTION']
+        GENERATE_HEATMAP = configlabels['DEFAULT']['GENERATE_HEATMAP']
     else:
         print("NO CONFIG FILE, CREATING A DEFAULT ONE")
         save_labels()
@@ -144,14 +153,15 @@ class Screenshot(tk.Frame):
         img = Image.fromarray(Utils.ant_screenshot())
         img_Screenshot = ImageTk.PhotoImage(image=img)
         img_Screenshot = img_Screenshot._PhotoImage__photo.subsample(2, 2)
-        Screen = tk.Button(self, image=img_Screenshot, command=lambda: [
+        Screen = tk.Button(self, image=img_Screenshot, compound=tk.BOTTOM, text = CAPTURE_AREA, command=lambda: [
             master.iconify(),
             time.sleep(0.5),
             Utils.find_coords(master),
             self.master.switch_frame(Home)
         ])
         Screen.image = img_Screenshot
-        Screen.grid(row=0, column=2, padx=20, pady=20, rowspan=5)
+        Screen.grid(row=1, column=2, padx=20, rowspan=4)
+        tk.Label(self, text = CAPTURE_INSTRUCTION, justify=tk.LEFT).grid(row = 5, column = 2, sticky = tk.W, padx=20)
         textavvio= START + "(" + Utils.get_Stop_Key() + " "+ STOP_SCREENSHOTTING + ")"
         avvio = tk.Button(self, text=textavvio,
                           command=lambda: [
@@ -185,7 +195,7 @@ class Elaborazione(tk.Frame):
         self.frame.bind("<Configure>", self.onFrameConfigure)
         self.populate()
 
-        tk.Button(self, text = START, command=lambda: [
+        tk.Button(self, text = GENERATE_HEATMAP, command=lambda: [
             Utils.set_Pixel_Intensity(var_pix_int.get()),
             Utils.set_Around_Pixel_Intensity(var_pix_int_vic.get()),
             Utils.readconfig(),

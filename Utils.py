@@ -16,9 +16,9 @@ import multiprocessing
 
 user32 = ctypes.windll.user32
 
-intensita_pixel = 3
-intensita_p_vicini = 1
-ingame_seconds_per_screenshot = 40
+intensita_pixel = 1
+intensita_p_vicini = 0
+ingame_seconds_per_screenshot = 150
 number_of_screenshot = 15
 x_iniziale = 0
 y_iniziale = 0

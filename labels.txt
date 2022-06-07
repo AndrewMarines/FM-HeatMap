@@ -8,14 +8,19 @@ queue_directory = Open screenshots folder
 reload_screen = Reload screen
 pixel_colouration = Pixel colour
 intensity = Pixel intensity
-attacking_direction = Direction of attack
+attacking_direction = Label direction of attack
 screenshot = Screenshot
 homepage = Home
 heatmap = Heatmap
 default_heatmap_name = Heatmap
-number_of_screenshot = NUMBER OF SCREENSHOTS
+number_of_screenshot = Number of screenshots
 seconds_per_screenshot = Frequency of screenshot
 start = Start
 match_name = Folder name
 stop_screenshotting =  TO STOP
+capture_area = Set area to capture
+capture_instruction = How to set the area to capture:
+	        1. Left click on top-left corner of the pitch;
+	        2. Right click on bottom-right corner of the pitch.
+generate_heatmap = Generate Heatmap
 
