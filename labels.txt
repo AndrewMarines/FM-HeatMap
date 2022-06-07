@@ -17,7 +17,7 @@ number_of_screenshot = Number of screenshots
 seconds_per_screenshot = Frequency of screenshot
 start = Start
 match_name = Folder name
-stop_screenshotting =  TO STOP
+stop_screenshotting =  to stop
 capture_area = Set area to capture
 capture_instruction = How to set the area to capture:
 	        1. Left click on top-left corner of the pitch;

@@ -44,6 +44,7 @@ def save_labels():
     }
     with open(CONF_FILE, 'w') as configfile:
         configlabels.write(configfile)
+    readlabels()
 
 def readlabels():
     global NO_SCREEN_AVAILABLE, REMOVE_FROM_DISK, REMOVE_FROM_QUEUE, SAVE_HEATMAP, GENERAL_DIRECTORY, QUEUE_DIRECTORY, RELOAD_SCREEN, STOP_SCREENSHOTTING
