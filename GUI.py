@@ -39,7 +39,8 @@ def save_labels():
         'CAPTURE_INSTRUCTION': """How to set the area to capture:
         1. Left click on top-left corner of the pitch;
         2. Right click on bottom-right corner of the pitch.""",
-        'GENERATE_HEATMAP' : "Generate Heatmap"
+        'GENERATE_HEATMAP' : "Generate Heatmap",
+        'REMOVE_DIR_FROM_QUEUE': "Remove all folder from queue"
 
     }
     with open(CONF_FILE, 'w') as configfile:
@@ -49,7 +50,7 @@ def save_labels():
 def readlabels():
     global NO_SCREEN_AVAILABLE, REMOVE_FROM_DISK, REMOVE_FROM_QUEUE, SAVE_HEATMAP, GENERAL_DIRECTORY, QUEUE_DIRECTORY, RELOAD_SCREEN, STOP_SCREENSHOTTING
     global PIXEL_COLOURATION,  INTENSITY, ATTACKING_DIRECTION, SCREENSHOT, HOMEPAGE, HEATMAP, DEFAULT_HEATMAP_NAME, NUMBER_OF_SCREENSHOT,SECONDS_PER_SCREENSHOT, START,MATCH_NAME
-    global CAPTURE_AREA, CAPTURE_INSTRUCTION, GENERATE_HEATMAP
+    global CAPTURE_AREA, CAPTURE_INSTRUCTION, GENERATE_HEATMAP, REMOVE_DIR_FROM_QUEUE
     if glob.glob(CONF_FILE):
         configlabels.read(CONF_FILE)
         NO_SCREEN_AVAILABLE = configlabels['DEFAULT']['NO_SCREEN_AVAILABLE']
@@ -74,6 +75,7 @@ def readlabels():
         CAPTURE_AREA = configlabels['DEFAULT']['CAPTURE_AREA']
         CAPTURE_INSTRUCTION = configlabels['DEFAULT']['CAPTURE_INSTRUCTION']
         GENERATE_HEATMAP = configlabels['DEFAULT']['GENERATE_HEATMAP']
+        REMOVE_DIR_FROM_QUEUE = configlabels['DEFAULT']['REMOVE_DIR_FROM_QUEUE']
     else:
         print("NO CONFIG FILE, CREATING A DEFAULT ONE")
         save_labels()
@@ -306,7 +308,7 @@ class Elaborazione(tk.Frame):
             d_string = directories[d].upper()
             d_string = d_string.replace("ELAB_MOVIMENTI\\", "").replace("\\","")
             tk.Label(self.frame, text = d_string, background="#ffffff").grid(row = index_dir + 1 , column = 0)
-            btn_remove_dir.append(tk.Button(self.frame, text =REMOVE_FROM_QUEUE, command= lambda c = d: [shutil.rmtree(directories[c]),
+            btn_remove_dir.append(tk.Button(self.frame, text =REMOVE_DIR_FROM_QUEUE, command= lambda c = d: [shutil.rmtree(directories[c]),
                                                                                                          self.refresh()]))
             btn_remove_dir[d]. grid(row = index_dir + 1 , column = 1, columnspan= 2, sticky = tk.NSEW)
 
